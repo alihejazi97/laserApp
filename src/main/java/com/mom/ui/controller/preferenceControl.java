@@ -63,8 +63,27 @@ public class preferenceControl implements Initializable,ControllerInterface {
         }
         saveButton.setOnMouseClicked(mouseEvent -> {
             String s = targetNumberTextField.getText();
-            if (StringUtils.isNumeric(s))
-                Target.TARGET_NUMBER = Integer.parseInt(s);
+            if (StringUtils.isNumeric(s)) {
+                if (Integer.parseInt(s) < 1 || Integer.parseInt(s) > 20) {
+                    //display error
+                    //تعداد سلاح بین ۱ تا ۸ باید باشد.
+                return;
+                }
+            }
+            else return;
+            String s0 = gunNumberTextField.getText();
+            if (StringUtils.isNumeric(s0)) {
+                if (Integer.parseInt(s0) < 1 || Integer.parseInt(s0) > 8) {
+                    //display error
+                    //تعداد سلاح بین ۱ تا ۸ باید باشد.
+                    return;
+                }
+            }
+            else return;
+            String s2 = ((SerialPort) gunPortComboBox.getSelectionModel().getSelectedItem()).getPortDescription();
+            Target.TARGET_NUMBER = Integer.parseInt(s);
+            Target.camDescriptor = s2;
+            Target.GUN_NUMBER = Integer.parseInt(s0);
             int targetSize = targets.size();
             if (targetSize > Target.TARGET_NUMBER){
                 for (int i = 0; i < targetSize - Target.TARGET_NUMBER; i++) {
@@ -78,11 +97,6 @@ public class preferenceControl implements Initializable,ControllerInterface {
                     targets.add(target);
                 }
             }
-            s = gunNumberTextField.getText();
-            if (StringUtils.isNumeric(s))
-                Target.GUN_NUMBER = Integer.parseInt(s);
-            s = ((SerialPort) gunPortComboBox.getSelectionModel().getSelectedItem()).getPortDescription();
-            Target.camDescriptor = s;
             GsonPersistence.persist2(targets);
         });
     }
