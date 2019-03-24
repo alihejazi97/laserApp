@@ -13,6 +13,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 
@@ -55,7 +56,7 @@ public class MainController implements Initializable, ControllerInterface {
                 controller = ((preferenceControl) pair.getValue());
                 stage = pair.getKey();
                 stages.add(stage);
-                stage.setAlwaysOnTop(true);
+                stage.initModality(Modality.WINDOW_MODAL);
                 stage.show();
                 controller.setTargets(targets);
             }
@@ -89,7 +90,8 @@ public class MainController implements Initializable, ControllerInterface {
                 Pair<Stage, ControllerInterface> pair = loadLayoutController("targetConf.fxml");
                 controller = ((TargetConfController) pair.getValue());
                 stage = pair.getKey();
-                stage.setAlwaysOnTop(true);
+
+                stage.initModality(Modality.WINDOW_MODAL);
                 pair.getKey().show();
                 controller.setTargets(targets);
             }

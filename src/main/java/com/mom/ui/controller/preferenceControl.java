@@ -12,6 +12,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
+import javafx.stage.Modality;
 import org.apache.commons.lang3.StringUtils;
 
 import java.net.URL;
@@ -70,6 +71,7 @@ public class preferenceControl implements Initializable,ControllerInterface {
                     alert.setTitle("توجه");
                     alert.setHeaderText("");
                     alert.setContentText("تعداد سیبل بین ۱ تا ۲۰ باید باشد.");
+                    alert.initModality(Modality.WINDOW_MODAL);
                     alert.showAndWait();
                     return;
                 }
@@ -83,6 +85,7 @@ public class preferenceControl implements Initializable,ControllerInterface {
                     alert.setTitle("توجه");
                     alert.setHeaderText("");
                     alert.setContentText("تعداد سلاح بین ۱ تا ۸ باید باشد.");
+                    alert.initModality(Modality.WINDOW_MODAL);
                     alert.showAndWait();
                     return;
                 }
