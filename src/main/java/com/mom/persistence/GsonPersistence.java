@@ -26,6 +26,7 @@ public class GsonPersistence {
             if (file.createNewFile()) {
                 System.out.println("creating the file.");
             }
+            System.out.println("object size" + objects.size());
             GsonBuilder gsonBuilder = new GsonBuilder();
             gsonBuilder.excludeFieldsWithModifiers(java.lang.reflect.Modifier.TRANSIENT);
             Gson gson = gsonBuilder.create();

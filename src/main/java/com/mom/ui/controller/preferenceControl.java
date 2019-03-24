@@ -59,14 +59,14 @@ public class preferenceControl implements Initializable,ControllerInterface {
             String s = targetNumberTextField.getText();
             if (StringUtils.isNumeric(s))
                 Target.TARGET_NUMBER = Integer.parseInt(s);
-            int targetNumberNow = targets.size();
-            if (targetNumberNow > Target.TARGET_NUMBER){
-                for (int i = 0; i < targetNumberNow - Target.TARGET_NUMBER; i++) {
+            int targetSize = targets.size();
+            if (targetSize > Target.TARGET_NUMBER){
+                for (int i = 0; i < targetSize - Target.TARGET_NUMBER; i++) {
                     targets.remove(targets.size() - 1);
                 }
             }
-            if (targetNumberNow < Target.TARGET_NUMBER){
-                for (int i = 0; i < Target.TARGET_NUMBER - targetNumberNow; i++) {
+            if (targetSize < Target.TARGET_NUMBER){
+                for (int i = 0; i < Target.TARGET_NUMBER - targetSize; i++) {
                     Target target = new Target();
                     target.name = Integer.toString(targets.size());
                     targets.add(target);

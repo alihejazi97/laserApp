@@ -63,6 +63,7 @@ public class SettingPersController implements Initializable, ControllerInterface
     private double originY;
 
     public void afterShow(){
+        createCircles();
         if (targets.size() != 0)
             targetComboBox.getSelectionModel().select(0);
     }
@@ -77,8 +78,8 @@ public class SettingPersController implements Initializable, ControllerInterface
 
     public void putCirclesAroundImage() {
         System.out.println("putCirclesAroundImage");
-        originX = imgVRaw.getLayoutX();
-        originY = imgVRaw.getLayoutY() + imgVRaw.getParent().getLayoutY();
+        originX = imgVRaw.getX();
+        originY = imgVRaw.getY();
         System.out.println("originX");
         circles.get(0).setCenterX(originX);
         circles.get(0).setCenterY(originY);
@@ -138,48 +139,7 @@ public class SettingPersController implements Initializable, ControllerInterface
         }
     }
 
-    private void updateCircles(Target target) {
-        circles.get(0).setTranslateX((target.point0.x * imgVRaw.getFitWidth()) + originX - circles.get(0).getCenterX());
-        circles.get(0).setTranslateY((target.point0.y * imgVRaw.getFitHeight()) + originY - circles.get(0).getCenterY());
-        circles.get(1).setTranslateX((target.point1.x * imgVRaw.getFitWidth()) + originX - circles.get(1).getCenterX());
-        circles.get(1).setTranslateY((target.point1.y * imgVRaw.getFitHeight()) + originY - circles.get(1).getCenterY());
-        circles.get(2).setTranslateX((target.point2.x * imgVRaw.getFitWidth()) - circles.get(2).getCenterX() + originX);
-        circles.get(2).setTranslateY((target.point2.y * imgVRaw.getFitHeight()) - circles.get(2).getCenterY() + originY);
-        circles.get(3).setTranslateX((target.point3.x * imgVRaw.getFitWidth()) - circles.get(3).getCenterX() + originX);
-        circles.get(3).setTranslateY((target.point3.y * imgVRaw.getFitHeight()) - circles.get(3).getCenterY() + originY);
-        updateDetectRedDotTest();
-    }
-
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        lines = new ArrayList<>();
-        circles = new ArrayList<>();
-        cameraControl = CameraControl.getInstance();
-        cameraComboBox.setItems(FXCollections.observableList(cameraControl.getCameraNames()));
-        targetComboBox.getSelectionModel().selectedIndexProperty().addListener((observableValue, oldVal, newVal) -> {
-            selectedTarget = targets.get(newVal.intValue());
-            detectRedDot.target = selectedTarget;
-            if (!selectedTarget.valid) {
-                updateInvalidTargetPoints();
-            }
-            updateCircles(selectedTarget);
-            for (int i = 0; i < circles.size(); i++) {
-                circles.get(i).setVisible(true);
-                lines.get(i).setVisible(true);
-            }
-            if (!cameraComboBox.getItems().contains(selectedTarget.webCamName)) {
-                updateCamera(null);
-                cameraComboBox.getSelectionModel().clearSelection();
-            }
-        });
-        cameraComboBox.getSelectionModel().selectedIndexProperty().addListener((observableValue, oldVal, newVal) -> {
-            if (selectedTarget == null) {
-                //show error message
-            } else {
-                updateCamera(cameraComboBox.getValue());
-                selectedTarget.webCamName = cameraComboBox.getValue();
-            }
-        });
+    public void createCircles(){
         for (int i = 0; i < CIRCLE_NUMBER; i++) {
             Circle circle = new Circle();
             circle.setFill(Color.rgb(255, 255, 255, 0.5));
@@ -243,6 +203,50 @@ public class SettingPersController implements Initializable, ControllerInterface
         lines.get(3).startYProperty().bind(circles.get(2).centerYProperty().add(circles.get(2).translateYProperty()));
         lines.get(3).endXProperty().bind(circles.get(3).centerXProperty().add(circles.get(3).translateXProperty()));
         lines.get(3).endYProperty().bind(circles.get(3).centerYProperty().add(circles.get(3).translateYProperty()));
+    }
+
+    private void updateCircles(Target target) {
+        circles.get(0).setTranslateX((target.point0.x * imgVRaw.getFitWidth()) + originX - circles.get(0).getCenterX());
+        circles.get(0).setTranslateY((target.point0.y * imgVRaw.getFitHeight()) + originY - circles.get(0).getCenterY());
+        circles.get(1).setTranslateX((target.point1.x * imgVRaw.getFitWidth()) + originX - circles.get(1).getCenterX());
+        circles.get(1).setTranslateY((target.point1.y * imgVRaw.getFitHeight()) + originY - circles.get(1).getCenterY());
+        circles.get(2).setTranslateX((target.point2.x * imgVRaw.getFitWidth()) - circles.get(2).getCenterX() + originX);
+        circles.get(2).setTranslateY((target.point2.y * imgVRaw.getFitHeight()) - circles.get(2).getCenterY() + originY);
+        circles.get(3).setTranslateX((target.point3.x * imgVRaw.getFitWidth()) - circles.get(3).getCenterX() + originX);
+        circles.get(3).setTranslateY((target.point3.y * imgVRaw.getFitHeight()) - circles.get(3).getCenterY() + originY);
+        updateDetectRedDotTest();
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        lines = new ArrayList<>();
+        circles = new ArrayList<>();
+        cameraControl = CameraControl.getInstance();
+        cameraComboBox.setItems(FXCollections.observableList(cameraControl.getCameraNames()));
+        targetComboBox.getSelectionModel().selectedIndexProperty().addListener((observableValue, oldVal, newVal) -> {
+            selectedTarget = targets.get(newVal.intValue());
+            detectRedDot.target = selectedTarget;
+            if (!selectedTarget.valid) {
+                updateInvalidTargetPoints();
+            }
+            updateCircles(selectedTarget);
+            for (int i = 0; i < circles.size(); i++) {
+                circles.get(i).setVisible(true);
+                lines.get(i).setVisible(true);
+            }
+            if (!cameraComboBox.getItems().contains(selectedTarget.webCamName)) {
+                updateCamera(null);
+                cameraComboBox.getSelectionModel().clearSelection();
+            }
+        });
+        cameraComboBox.getSelectionModel().selectedIndexProperty().addListener((observableValue, oldVal, newVal) -> {
+            if (selectedTarget == null) {
+                //show error message
+            } else {
+                updateCamera(cameraComboBox.getValue());
+                selectedTarget.webCamName = cameraComboBox.getValue();
+            }
+        });
         saveButton.setOnMouseClicked(mouseEvent -> {
             GsonPersistence.persist2(targets);
         });
