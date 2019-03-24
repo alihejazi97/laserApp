@@ -76,6 +76,8 @@ public class preferenceControl implements Initializable,ControllerInterface {
             s = gunNumberTextField.getText();
             if (StringUtils.isNumeric(s))
                 Target.GUN_NUMBER = Integer.parseInt(s);
+            s = (String) gunPortComboBox.getSelectionModel().getSelectedItem();
+            Target.camDescriptor = s;
             GsonPersistence.persist2(targets);
         });
     }
