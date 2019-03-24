@@ -55,7 +55,11 @@ public class preferenceControl implements Initializable,ControllerInterface {
         }
         targetNumberTextField.setText(Integer.toString(Target.TARGET_NUMBER));
         gunNumberTextField.setText(Integer.toString(Target.GUN_NUMBER));
-
+        if (!SerialPort.getCommPort(Target.camDescriptor).getPortDescription().equals("Bad Port"))
+            gunPortComboBox.getSelectionModel().select(SerialPort.getCommPort(Target.camDescriptor));
+        else {
+            //display error message
+        }
         saveButton.setOnMouseClicked(mouseEvent -> {
             String s = targetNumberTextField.getText();
             if (StringUtils.isNumeric(s))

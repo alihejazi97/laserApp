@@ -78,8 +78,8 @@ public class SettingPersController implements Initializable, ControllerInterface
 
     public void putCirclesAroundImage() {
         System.out.println("putCirclesAroundImage");
-        originX = imgVRaw.getX();
-        originY = imgVRaw.getY();
+        originX = imgVRaw.getLayoutX();
+        originY = imgVRaw.getLayoutY();
         System.out.println("originX");
         circles.get(0).setCenterX(originX);
         circles.get(0).setCenterY(originY);
