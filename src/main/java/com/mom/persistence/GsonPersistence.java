@@ -3,7 +3,6 @@ package com.mom.persistence;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mom.cam.CameraControl;
-import com.mom.imgprocess.ColorBound;
 import com.mom.imgprocess.Target;
 
 import java.io.File;
@@ -23,21 +22,21 @@ public class GsonPersistence {
 
     public static void persist2(List objects) {
         File file = new File("./settingTarget.json");
-        try{
-            if (file.createNewFile()){
-            System.out.println("creating the file.");
-        }
-            GsonBuilder gsonBuilder  = new GsonBuilder();
+        try {
+            if (file.createNewFile()) {
+                System.out.println("creating the file.");
+            }
+            GsonBuilder gsonBuilder = new GsonBuilder();
             gsonBuilder.excludeFieldsWithModifiers(java.lang.reflect.Modifier.TRANSIENT);
             Gson gson = gsonBuilder.create();
             FileWriter writer = new FileWriter(file);
-            gson.toJson(objects,writer);
+            gson.toJson(objects, writer);
             writer.close();
+        } catch (IOException e) {
         }
-        catch (IOException e){}
     }
 
-    public static void makeDefaultTargets(List<Target> targets){
+    public static void makeDefaultTargets(List<Target> targets) {
         final List<String> cameraNames = cameraControl.getCameraNames();
         Target.TARGET_NUMBER = TARGET_NUMBER_DEFAULT;
         Target.GUN_NUMBER = GUN_NUMBER_DEFAULT;
@@ -54,35 +53,33 @@ public class GsonPersistence {
         }
     }
 
-    public static List load2(){
+    public static List load2() {
         ArrayList<Target> targets = new ArrayList<>();
         File file = new File("./settingTarget.json");
         try {
-            if (file.createNewFile()){
+            if (file.createNewFile()) {
                 System.out.println("file has been created.");
                 makeDefaultTargets(targets);
-        }
-        else
-        {
+                persist2(targets);
+                targets.clear();
+            }
             System.out.println("file has been loaded.");
-            GsonBuilder gsonBuilder  = new GsonBuilder();
+            GsonBuilder gsonBuilder = new GsonBuilder();
             gsonBuilder.excludeFieldsWithModifiers(java.lang.reflect.Modifier.TRANSIENT);
             Gson gson = gsonBuilder.create();
             FileReader reader = new FileReader(file);
-            Target[] Targets =  gson.fromJson(reader, Target[].class);
-            if (Targets == null || Targets.length == 0){
+            Target[] Targets = gson.fromJson(reader, Target[].class);
+            if (Targets == null || Targets.length == 0) {
                 makeDefaultTargets(targets);
-            }
-            else{
+            } else {
                 for (int i = 0; i < Targets.length; i++) {
-                targets.add(Targets[i]);
+                    targets.add(Targets[i]);
                 }
             }
             reader.close();
             return targets;
+        } catch (IOException e) {
         }
-        }
-        catch (IOException e){}
         return targets;
     }
 }

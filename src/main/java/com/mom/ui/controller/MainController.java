@@ -45,7 +45,6 @@ public class MainController implements Initializable, ControllerInterface {
         stages = new ArrayList<>();
         targets = GsonPersistence.load2();
         System.out.println(Target.TARGET_NUMBER);
-        DetectRedDot.colorBounds = GsonPersistence.load();
 
         preferencesMenuItem.setOnAction(new EventHandler<ActionEvent>() {
             preferenceControl controller;
@@ -80,40 +79,6 @@ public class MainController implements Initializable, ControllerInterface {
                 }
             }
         });
-
-
-
-//        inRangeMenuItem.setOnAction(new EventHandler<>() {
-//            private SettingController controller;
-//            Stage stage;
-//
-//            @Override
-//            public void handle(ActionEvent actionEvent) {
-//                Pair<Stage, ControllerInterface> pair = loadLayoutController("ToBeDeleted.fxml");
-//                controller = ((SettingController) pair.getValue());
-//                stage = pair.getKey();
-//                controller.setWebCam(webCam);
-//                controller.setImgVoriginal(imgVOriginal);
-//                controller.setDetectRedDot(new DetectRedDot());
-//                stage.show();
-//            }
-//        });
-
-//
-//        targetMenuItem.setOnAction(new EventHandler<>() {
-//            private SettingPersController controller;
-//            Stage stage;
-//
-//            @Override
-//            public void handle(ActionEvent actionEvent) {
-//                Pair<Stage, ControllerInterface> pair = loadLayoutController("settingPers.fxml");
-//                controller = ((SettingPersController) pair.getValue());
-//                stage = pair.getKey();
-//                controller.setTargets(targets);
-//                controller.setDetectRedDot(new DetectRedDot());
-//                pair.getKey().show();
-//            }
-//        });
 
         targetMenuItem.setOnAction(new EventHandler<>() {
             private TargetConfController controller;

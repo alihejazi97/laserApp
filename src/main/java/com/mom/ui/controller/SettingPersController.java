@@ -110,7 +110,7 @@ public class SettingPersController implements Initializable, ControllerInterface
         selectedTarget.valid = true;
     }
 
-    private void updateDetectRedDotTest2() {
+    private void updateInvalidTargetPoints() {
         selectedTarget.point0.x = 0;
         selectedTarget.point0.y = 0;
         selectedTarget.point1.x = 1;
@@ -119,7 +119,6 @@ public class SettingPersController implements Initializable, ControllerInterface
         selectedTarget.point2.y = 1;
         selectedTarget.point3.x = 1;
         selectedTarget.point3.y = 1;
-        selectedTarget.valid = true;
         selectedTarget.valid = true;
     }
 
@@ -161,7 +160,7 @@ public class SettingPersController implements Initializable, ControllerInterface
             selectedTarget = targets.get(newVal.intValue());
             detectRedDot.target = selectedTarget;
             if (!selectedTarget.valid) {
-                updateDetectRedDotTest2();
+                updateInvalidTargetPoints();
             }
             updateCircles(selectedTarget);
             for (int i = 0; i < circles.size(); i++) {
