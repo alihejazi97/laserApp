@@ -1,0 +1,87 @@
+package com.mom.ui.controller;
+
+import com.fazecast.jSerialComm.SerialPort;
+import com.mom.imgprocess.Target;
+import com.mom.persistence.GsonPersistence;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.TextField;
+import org.apache.commons.lang3.StringUtils;
+
+import java.net.URL;
+import java.util.Arrays;
+import java.util.List;
+import java.util.ResourceBundle;
+
+public class preferenceControl implements Initializable,ControllerInterface {
+
+    public void setTargets(List<Target> targets) {
+        this.targets = targets;
+        gunPortComboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener() {
+            @Override
+            public void changed(ObservableValue observableValue, Object o, Object port) {
+                if (port != null)
+                    Target.camDescriptor = ((SerialPort)(port)).getDescriptivePortName();
+            }
+        });
+    }
+
+    List<Target> targets;
+
+    @FXML
+    Button saveButton;
+
+    @FXML
+    ComboBox gunPortComboBox;
+
+    @FXML
+    TextField gunNumberTextField,targetNumberTextField;
+
+    @Override
+    public void shutdown() {
+
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        if (SerialPort.getCommPorts().length != 0){
+            List<SerialPort> commPorts = Arrays.asList(SerialPort.getCommPorts());
+            gunPortComboBox.setItems(FXCollections.observableList(commPorts));
+        }
+        targetNumberTextField.setText(Integer.toString(Target.TARGET_NUMBER));
+        gunNumberTextField.setText(Integer.toString(Target.GUN_NUMBER));
+        targetNumberTextField.setOnAction(actionEvent -> {
+            String s = targetNumberTextField.getText();
+            if (StringUtils.isNumeric(s))
+                Target.TARGET_NUMBER = Integer.parseInt(s);
+            int targetNumberNow = targets.size();
+            if (targetNumberNow > Target.TARGET_NUMBER){
+                for (int i = 0; i < targetNumberNow - Target.TARGET_NUMBER; i++) {
+                    targets.remove(targets.size() - 1);
+                }
+            }
+            if (targetNumberNow < Target.TARGET_NUMBER){
+                for (int i = 0; i < Target.TARGET_NUMBER - targetNumberNow; i++) {
+                    Target target = new Target();
+                    target.name = Integer.toString(targets.size());
+                    targets.add(target);
+                }
+            }
+        });
+        gunNumberTextField.setOnAction(actionEvent -> {
+            String s = gunNumberTextField.getText();
+            if (StringUtils.isNumeric(s))
+                Target.GUN_NUMBER = Integer.parseInt(s);
+        });
+
+        saveButton.setOnMouseClicked(mouseEvent -> {
+            GsonPersistence.persist2(targets);
+        });
+    }
+}
+

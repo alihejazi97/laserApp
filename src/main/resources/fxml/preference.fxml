@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mom.ui.controller.preferenceControl">
+   <children>
+      <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Separator visible="false" orientation="VERTICAL" prefHeight="200.0" />
+            <Label text="تعداد سلاح">
+               <graphic>
+                  <TextField fx:id="gunNumberTextField" />
+               </graphic>
+            </Label>
+            <Separator visible="false" orientation="VERTICAL" prefHeight="200.0" />
+            <Label text="تعداد سیبل">
+               <graphic>
+                  <TextField fx:id="targetNumberTextField" />
+               </graphic>
+            </Label>
+            <Separator visible="false" orientation="VERTICAL" prefHeight="200.0" />
+            <Label nodeOrientation="LEFT_TO_RIGHT" text="انتخاب پورت ارتباطی با سلاح">
+               <graphic>
+                  <ComboBox fx:id="gunPortComboBox" prefWidth="150.0" />
+               </graphic>
+            </Label>
+            <Separator visible="false" orientation="VERTICAL" prefHeight="200.0" />
+            <Button fx:id="saveButton" mnemonicParsing="false" text="Button" />
+            <Separator visible="false" orientation="VERTICAL" prefHeight="200.0" />
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>

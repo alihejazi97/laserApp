@@ -1,0 +1,13 @@
+//        Imgproc.Canny(matCopy,nice,50,150);
+////        Imgproc.cvtColor(mat,nice,Imgproc.COLOR_BGR2GRAY);
+//        MatOfPoint3f circles = new MatOfPoint3f();
+//        Imgproc.HoughCircles(nice,circles,Imgproc.CV_HOUGH_GRADIENT,1,1);
+//        List<Point3> point3s = circles.toList();
+//        Imgproc.cvtColor(nice,nice,Imgproc.COLOR_GRAY2BGR);
+//        for (int i = 0; i < point3s.size(); i++) {
+//            System.out.println("i am in circle area" + nice.channels());
+//            int color = (255 * (i + 1)) / point3s.size();
+//            Imgproc.circle(nice,new Point(point3s.get(i).x,point3s.get(i).y),(int) point3s.get(i).z,new Scalar(0,0,color
+//
+//            ),100);
+//        }

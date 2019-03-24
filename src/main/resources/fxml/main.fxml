@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane fx:id="anchorPaneRoot" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="620.0" prefWidth="972.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mom.ui.controller.MainController">
+   <children>
+      <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <MenuBar>
+              <menus>
+                <Menu mnemonicParsing="false" text="File">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="Close" />
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Edit">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="Delete" />
+                  </items>
+                </Menu>
+                  <Menu fx:id="setting" mnemonicParsing="false" text="تنظیمات">
+                     <items>
+                        <MenuItem fx:id="advanceSettingMenuItem" mnemonicParsing="false" text="تنظیمات پیشرفته" />
+                        <MenuItem fx:id="targetMenuItem" mnemonicParsing="false" text="تنظیم سیبل" />
+                        <MenuItem fx:id="preferencesMenuItem" mnemonicParsing="false" text="پیش فرض ها" />
+                     </items>
+                  </Menu>
+                <Menu mnemonicParsing="false" text="راهنما">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="درباره ی ما" />
+                        <MenuItem mnemonicParsing="false" text="راهنمای برنامه" />
+                  </items>
+                </Menu>
+              </menus>
+            </MenuBar>
+            <HBox alignment="TOP_CENTER" prefHeight="532.0" prefWidth="920.0">
+               <children>
+                  <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
+                     <children>
+                        <ImageView fitHeight="500.0" fitWidth="340.0" pickOnBounds="true" preserveRatio="true" visible="false" VBox.vgrow="ALWAYS">
+                           <image>
+                              <Image url="@../img/shooting0.jpg" />
+                           </image>
+                           <VBox.margin>
+                              <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+                           </VBox.margin>
+                        </ImageView>
+                        <Button fx:id="shooting0Button" mnemonicParsing="false" text="شروع تیراندازی متحرک">
+                           <VBox.margin>
+                              <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+                           </VBox.margin>
+                        </Button>
+                     </children>
+                  </VBox>
+                  <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
+                     <children>
+                        <ImageView fitHeight="500.0" fitWidth="308.0" opacity="0.97" pickOnBounds="true" preserveRatio="true" visible="false" VBox.vgrow="ALWAYS">
+                           <image>
+                              <Image url="@../img/shooting2.png" />
+                           </image>
+                           <VBox.margin>
+                              <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+                           </VBox.margin>
+                        </ImageView>
+                        <Button fx:id="shooting1Button" mnemonicParsing="false" text="شروع تیر اندازی نشسته">
+                           <VBox.margin>
+                              <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+                           </VBox.margin>
+                        </Button>
+                     </children>
+                  </VBox>
+                  <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0">
+                     <children>
+                        <ImageView fitHeight="500.0" fitWidth="340.0" pickOnBounds="true" preserveRatio="true" visible="false" VBox.vgrow="ALWAYS">
+                           <image>
+                              <Image url="@../img/shooting0.jpg" />
+                           </image>
+                           <VBox.margin>
+                              <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+                           </VBox.margin>
+                        </ImageView>
+                        <Button fx:id="shooting2Button" mnemonicParsing="false" text="شروع تیراندازی متحرک">
+                           <VBox.margin>
+                              <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+                           </VBox.margin>
+                        </Button>
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>
