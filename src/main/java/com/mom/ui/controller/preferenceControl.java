@@ -55,7 +55,8 @@ public class preferenceControl implements Initializable,ControllerInterface {
         }
         targetNumberTextField.setText(Integer.toString(Target.TARGET_NUMBER));
         gunNumberTextField.setText(Integer.toString(Target.GUN_NUMBER));
-        targetNumberTextField.setOnAction(actionEvent -> {
+
+        saveButton.setOnMouseClicked(mouseEvent -> {
             String s = targetNumberTextField.getText();
             if (StringUtils.isNumeric(s))
                 Target.TARGET_NUMBER = Integer.parseInt(s);
@@ -72,14 +73,9 @@ public class preferenceControl implements Initializable,ControllerInterface {
                     targets.add(target);
                 }
             }
-        });
-        gunNumberTextField.setOnAction(actionEvent -> {
-            String s = gunNumberTextField.getText();
+            s = gunNumberTextField.getText();
             if (StringUtils.isNumeric(s))
                 Target.GUN_NUMBER = Integer.parseInt(s);
-        });
-
-        saveButton.setOnMouseClicked(mouseEvent -> {
             GsonPersistence.persist2(targets);
         });
     }
