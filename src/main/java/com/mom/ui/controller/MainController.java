@@ -114,7 +114,7 @@ public class MainController implements Initializable, ControllerInterface {
             e.printStackTrace();
         }
         ControllerInterface controller = fxmlLoader.getController();
-        Scene scene = new Scene(pane, pane.getWidth(), pane.getHeight());
+        Scene scene = new Scene(pane);
         Stage stage = new Stage();
         stage.setOnCloseRequest(windowEvent -> controller.shutdown());
         stage.setScene(scene);

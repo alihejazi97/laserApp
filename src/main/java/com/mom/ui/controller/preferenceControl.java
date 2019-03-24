@@ -8,6 +8,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
@@ -65,17 +66,23 @@ public class preferenceControl implements Initializable,ControllerInterface {
             String s = targetNumberTextField.getText();
             if (StringUtils.isNumeric(s)) {
                 if (Integer.parseInt(s) < 1 || Integer.parseInt(s) > 20) {
-                    //display error
-                    //تعداد سلاح بین ۱ تا ۸ باید باشد.
-                return;
+                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setTitle("توجه");
+                    alert.setHeaderText("");
+                    alert.setContentText("تعداد سیبل بین ۱ تا ۲۰ باید باشد.");
+                    alert.showAndWait();
+                    return;
                 }
             }
             else return;
             String s0 = gunNumberTextField.getText();
             if (StringUtils.isNumeric(s0)) {
                 if (Integer.parseInt(s0) < 1 || Integer.parseInt(s0) > 8) {
-                    //display error
-                    //تعداد سلاح بین ۱ تا ۸ باید باشد.
+                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setTitle("توجه");
+                    alert.setHeaderText("");
+                    alert.setContentText("تعداد سلاح بین ۱ تا ۸ باید باشد.");
+                    alert.showAndWait();
                     return;
                 }
             }

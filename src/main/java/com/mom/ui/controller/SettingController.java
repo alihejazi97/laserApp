@@ -99,11 +99,7 @@ public class SettingController implements Initializable , ControllerInterface {
 //                filtersChoiceBox.getSelectionModel().selectPrevious();
 //                Platform.runLater(() -> bounds.remove(colorBoundTemp));
 //            } else {
-//                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-//                alert.setTitle("filter selection");
-//                alert.setHeaderText("Results:");
-//                alert.setContentText("you can't empty filters!");
-//                alert.showAndWait();
+
 //            }
 //        });
 //        minHueSlider.valueProperty().addListener((observableValue, number, t1) -> {
