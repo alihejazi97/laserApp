@@ -58,7 +58,7 @@ public class preferenceControl implements Initializable,ControllerInterface {
         gunNumberTextField.setText(Integer.toString(Target.GUN_NUMBER));
         for (int i = 0; i < SerialPort.getCommPorts().length; i++) {
             if (Target.camDescriptor.equals(commPorts.get(i).getPortDescription())){
-                gunPortComboBox.getSelectionModel().select(SerialPort.getCommPort(Target.camDescriptor));
+                gunPortComboBox.getSelectionModel().select(commPorts.get(i));
             }
         }
         saveButton.setOnMouseClicked(mouseEvent -> {
