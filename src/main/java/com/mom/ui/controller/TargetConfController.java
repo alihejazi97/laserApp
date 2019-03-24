@@ -4,6 +4,8 @@ import com.mom.cam.CameraControl;
 import com.mom.imgprocess.DetectRedDot;
 import com.mom.imgprocess.Target;
 import com.mom.persistence.GsonPersistence;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -17,11 +19,12 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 import javafx.util.Pair;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -58,7 +61,7 @@ public class TargetConfController implements Initializable,ControllerInterface {
     TableColumn<Target,String> cameraColumn;
 
     @FXML
-    Button targetButton;
+    Button targetButton,saveButton;
 
     FXMLLoader fxmlLoader;
 
@@ -107,7 +110,49 @@ public class TargetConfController implements Initializable,ControllerInterface {
                 controller.afterShow();
             }
         });
+        gunCombobox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener() {
+            @Override
+            public void changed(ObservableValue observableValue, Object o, Object t1) {
+                gunId = ((int) gunCombobox.getSelectionModel().getSelectedItem());
+                for (Target target:
+                     targets) {
+                    if (target.gunId == gunId){
+                        targetCombobox.getSelectionModel().select(gunId);
+                        bulletNumTextField.setText(Integer.toString(target.bulletNum));
+                    }
+                }
+            }
+        });
+        targetCombobox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Target>() {
+            @Override
+            public void changed(ObservableValue<? extends Target> observableValue, Target target, Target t1) {
+                selectedTarget = targetCombobox.getSelectionModel().getSelectedItem();
+                selectedTarget.gunId = gunId;
+            }
+        });
+        bulletNumTextField.setOnMouseDragExited(mouseDragEvent -> {
+            if (StringUtils.isNumeric(bulletNumTextField.getText())){
+                int bulletNum = Integer.parseInt(bulletNumTextField.getText());
+                if (bulletNum > 0)
+                    if (selectedTarget != null)
+                        selectedTarget.bulletNum = bulletNum;
+            }
+
+        });
+        saveButton.setOnMouseClicked(mouseEvent -> GsonPersistence.persist2(targets));
     }
+    int gunId;
+    Target selectedTarget;
+    public void afterShow(){
+        guns = new ArrayList<>();
+        for (int i = 0; i < Target.GUN_NUMBER; i++) {
+            guns.add(i);
+        }
+        gunCombobox.setItems(FXCollections.observableList(guns));
+        targetCombobox.setItems(FXCollections.observableList(targets));
+    }
+
+    List<Integer> guns;
 
     private Pair<Stage, ControllerInterface> loadLayoutController(String resourceName) {
         fxmlLoader = new FXMLLoader();
@@ -119,7 +164,7 @@ public class TargetConfController implements Initializable,ControllerInterface {
             e.printStackTrace();
         }
         ControllerInterface controller = fxmlLoader.getController();
-        Scene scene = new Scene(pane, pane.getWidth(), pane.getHeight());
+        Scene scene = new Scene(pane);
         Stage stage = new Stage();
         stage.setOnCloseRequest(windowEvent -> controller.shutdown());
         stage.setScene(scene);

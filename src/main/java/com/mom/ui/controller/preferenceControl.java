@@ -63,6 +63,9 @@ public class preferenceControl implements Initializable,ControllerInterface {
                 gunPortComboBox.getSelectionModel().select(commPorts.get(i));
             }
         }
+        if (Target.camDescriptor.isEmpty() || Target.camDescriptor.isBlank()) {
+            gunPortComboBox.getSelectionModel().selectFirst();
+        }
         saveButton.setOnMouseClicked(mouseEvent -> {
             String s = targetNumberTextField.getText();
             if (StringUtils.isNumeric(s)) {
@@ -91,9 +94,14 @@ public class preferenceControl implements Initializable,ControllerInterface {
                 }
             }
             else return;
-            String s2 = ((SerialPort) gunPortComboBox.getSelectionModel().getSelectedItem()).getPortDescription();
+            if (gunPortComboBox.getSelectionModel().isEmpty()){
+                //display error message
+            }
+            else{
+                String s2 = ((SerialPort) gunPortComboBox.getSelectionModel().getSelectedItem()).getPortDescription();
+                Target.camDescriptor = s2;
+            }
             Target.TARGET_NUMBER = Integer.parseInt(s);
-            Target.camDescriptor = s2;
             Target.GUN_NUMBER = Integer.parseInt(s0);
             int targetSize = targets.size();
             if (targetSize > Target.TARGET_NUMBER){
@@ -108,6 +116,7 @@ public class preferenceControl implements Initializable,ControllerInterface {
                     targets.add(target);
                 }
             }
+            System.out.println("i am here" );
             GsonPersistence.persist2(targets);
         });
     }

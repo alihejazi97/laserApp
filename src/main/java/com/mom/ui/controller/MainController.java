@@ -1,6 +1,7 @@
 
 package com.mom.ui.controller;
 
+import com.mom.BoardConnection.Arduino;
 import com.mom.imgprocess.DetectRedDot;
 import com.mom.imgprocess.Target;
 import com.mom.persistence.GsonPersistence;
@@ -39,8 +40,11 @@ public class MainController implements Initializable, ControllerInterface {
 
     public List<Target> targets;
 
+    public Arduino arduino;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        arduino = Arduino.getInstance();
         targets = new ArrayList<>();
         detectRedDots = new ArrayList<>();
         stages = new ArrayList<>();
@@ -90,10 +94,10 @@ public class MainController implements Initializable, ControllerInterface {
                 Pair<Stage, ControllerInterface> pair = loadLayoutController("targetConf.fxml");
                 controller = ((TargetConfController) pair.getValue());
                 stage = pair.getKey();
-
                 stage.initModality(Modality.WINDOW_MODAL);
-                pair.getKey().show();
                 controller.setTargets(targets);
+                pair.getKey().show();
+                controller.afterShow();
             }
         });
     }

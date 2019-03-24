@@ -1,5 +1,7 @@
 package com.mom.imgprocess;
 
 public class Gun {
-    public int gunNumber;
+    public int gunId;
+
+    public int time;
 }

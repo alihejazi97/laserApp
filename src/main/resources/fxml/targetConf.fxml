@@ -17,16 +17,10 @@
    <children>
       <VBox alignment="TOP_CENTER" nodeOrientation="RIGHT_TO_LEFT" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <HBox prefHeight="100.0" prefWidth="200.0">
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <VBox alignment="TOP_CENTER" nodeOrientation="LEFT_TO_RIGHT" prefHeight="200.0" prefWidth="217.0">
+                  <VBox alignment="TOP_RIGHT" nodeOrientation="LEFT_TO_RIGHT" prefHeight="200.0" prefWidth="217.0">
                      <children>
-                        <Separator orientation="VERTICAL" prefHeight="200.0" visible="false" />
-                        <Label text="سیبل">
-                           <graphic>
-                              <ComboBox fx:id="targetCombobox" prefWidth="150.0" />
-                           </graphic>
-                        </Label>
                         <Separator orientation="VERTICAL" prefHeight="200.0" visible="false" />
                         <Label layoutX="28.0" layoutY="20.0" text="اسلحه">
                            <graphic>
@@ -34,25 +28,31 @@
                            </graphic>
                         </Label>
                         <Separator orientation="VERTICAL" prefHeight="200.0" visible="false" />
-                        <Label text="دوربین">
+                        <Label text="سیبل">
                            <graphic>
-                              <ComboBox fx:id="cameraComboBox" prefWidth="150.0" />
+                              <ComboBox fx:id="targetCombobox" prefHeight="25.0" prefWidth="152.0" />
                            </graphic>
                         </Label>
                         <Separator orientation="VERTICAL" prefHeight="200.0" visible="false" />
                         <Label text="تعداد تیر">
                            <graphic>
-                              <TextField fx:id="bulletNumTextField" />
+                              <TextField fx:id="bulletNumTextField" prefHeight="25.0" prefWidth="40.0" />
                            </graphic>
                         </Label>
                         <Separator orientation="VERTICAL" prefHeight="200.0" visible="false" />
                      </children>
+                     <HBox.margin>
+                        <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+                     </HBox.margin>
                   </VBox>
-                  <ButtonBar prefHeight="74.0" prefWidth="298.0">
+                  <ButtonBar nodeOrientation="LEFT_TO_RIGHT" prefHeight="40.0" prefWidth="200.0">
                      <buttons>
-                        <Button fx:id="targetButton" mnemonicParsing="false" prefHeight="30.0" prefWidth="101.0" text="تنظیم سیبل ..." />
-                        <Button mnemonicParsing="false" text="تنظیمات پایه" />
-                        <Button mnemonicParsing="false" text="ذخیره" />
+                        <Button fx:id="targetButton" mnemonicParsing="false" prefHeight="35.0" prefWidth="102.0" text="تنظیم سیبل ..." />
+                     </buttons>
+                  </ButtonBar>
+                  <ButtonBar prefHeight="40.0" prefWidth="200.0">
+                     <buttons>
+                        <Button fx:id="saveButton" mnemonicParsing="false" prefHeight="33.0" prefWidth="102.0" text="ذخیره" />
                      </buttons>
                   </ButtonBar>
                </children>

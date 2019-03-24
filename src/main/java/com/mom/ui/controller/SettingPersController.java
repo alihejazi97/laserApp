@@ -31,7 +31,7 @@ public class SettingPersController implements Initializable, ControllerInterface
     private Button saveButton;
 
     @FXML
-    private AnchorPane anchor;
+    private AnchorPane anchor,imgVRawAnchor,imgVSelectedAnchor;
 
     @FXML
     private ComboBox<String> cameraComboBox;
@@ -83,12 +83,12 @@ public class SettingPersController implements Initializable, ControllerInterface
         System.out.println("originX");
         circles.get(0).setCenterX(originX);
         circles.get(0).setCenterY(originY);
-        circles.get(1).setCenterX(originX + imgVRaw.getFitWidth());
+        circles.get(1).setCenterX(originX + imgVRaw.getFitWidth() * 0.1);
         circles.get(1).setCenterY(originY);
         circles.get(2).setCenterX(originX);
-        circles.get(2).setCenterY(originY + imgVRaw.getFitHeight());
-        circles.get(3).setCenterX(originX + imgVRaw.getFitWidth());
-        circles.get(3).setCenterY(originY + imgVRaw.getFitHeight());
+        circles.get(2).setCenterY(originY + imgVRaw.getFitHeight() * 0.1);
+        circles.get(3).setCenterX(originX + imgVRaw.getFitWidth() * 0.1);
+        circles.get(3).setCenterY(originY + imgVRaw.getFitHeight() * 0.1);
     }
 
     @Override
@@ -114,12 +114,12 @@ public class SettingPersController implements Initializable, ControllerInterface
     private void updateInvalidTargetPoints() {
         selectedTarget.point0.x = 0;
         selectedTarget.point0.y = 0;
-        selectedTarget.point1.x = 1;
+        selectedTarget.point1.x = 0.1;
         selectedTarget.point1.y = 0;
         selectedTarget.point2.x = 0;
-        selectedTarget.point2.y = 1;
-        selectedTarget.point3.x = 1;
-        selectedTarget.point3.y = 1;
+        selectedTarget.point2.y =  0.1;
+        selectedTarget.point3.x = 0.1;
+        selectedTarget.point3.y = 0.1;
         selectedTarget.valid = true;
     }
 
@@ -158,7 +158,7 @@ public class SettingPersController implements Initializable, ControllerInterface
         }
         putCirclesAroundImage();
         for (int i = 0; i < CIRCLE_NUMBER; i++) {
-            anchor.getChildren().add(circles.get(i));
+            imgVRawAnchor.getChildren().add(circles.get(i));
         }
         for (int i = 0; i < CIRCLE_NUMBER; i++) {
             Line line = new Line();
@@ -166,7 +166,7 @@ public class SettingPersController implements Initializable, ControllerInterface
             line.setStroke(Color.LIGHTBLUE);
             line.setStrokeWidth(2);
             line.setVisible(false);
-            anchor.getChildren().add(line);
+            imgVRawAnchor.getChildren().add(line);
             lines.add(line);
         }
 

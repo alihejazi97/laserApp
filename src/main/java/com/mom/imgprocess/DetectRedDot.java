@@ -22,19 +22,14 @@ public class DetectRedDot implements ChangeListener<Mat> {
     public List<Circle> circles;
     public Target target;
     public ArrayList<Point> shotPoint;
-    boolean shotflag;
     private boolean applyColorFilter = true;
-
-    public void setColorBoundTest(ColorBound colorBoundTest) {
-        this.colorBoundTest = colorBoundTest;
-    }
 
     public void setTest(boolean test) {
         this.test = test;
     }
 
-    private ColorBound colorBoundTest;
     private boolean test = false;
+
     private final int showCircleR = 50;
 
 
@@ -59,21 +54,6 @@ public class DetectRedDot implements ChangeListener<Mat> {
         return true;
     }
 
-    //    @Override
-//    public void changed(ObservableValue<? extends Mat> observableValue, Mat o, Mat mat) {
-//        if (test)
-//            test(mat);
-//        Mat matCopy = mat.clone();
-//        Imgproc.cvtColor(matCopy,matCopy,Imgproc.COLOR_BGR2HSV);
-//        reduceNoise(matCopy);
-//        Mat mask = colorBoundsFilter(matCopy);
-//        Point point = findDot(matCopy,mask);
-//        if (applyColorFilter)
-//            applyMask(matCopy, mask);
-//        Imgproc.cvtColor(matCopy,matCopy,Imgproc.COLOR_HSV2BGR);
-//        Imgproc.circle(matCopy,point,5,new Scalar(0,0,255),1,Core.LINE_AA);
-//        show(matCopy,show);
-//    }
     public DoubleProperty points;
 
     @Override
