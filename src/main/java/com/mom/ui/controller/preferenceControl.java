@@ -75,6 +75,7 @@ public class preferenceControl implements Initializable,ControllerInterface {
                 }
             }
             else return;
+            //
             String s0 = gunNumberTextField.getText();
             if (StringUtils.isNumeric(s0)) {
                 if (Integer.parseInt(s0) < 1 || Integer.parseInt(s0) > 8) {
