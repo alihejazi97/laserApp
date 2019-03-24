@@ -47,18 +47,19 @@ public class preferenceControl implements Initializable,ControllerInterface {
 
     }
 
+    List<SerialPort> commPorts;
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         if (SerialPort.getCommPorts().length != 0){
-            List<SerialPort> commPorts = Arrays.asList(SerialPort.getCommPorts());
+            commPorts = Arrays.asList(SerialPort.getCommPorts());
             gunPortComboBox.setItems(FXCollections.observableList(commPorts));
         }
         targetNumberTextField.setText(Integer.toString(Target.TARGET_NUMBER));
         gunNumberTextField.setText(Integer.toString(Target.GUN_NUMBER));
-        if (!SerialPort.getCommPort(Target.camDescriptor).getPortDescription().equals("Bad Port"))
-            gunPortComboBox.getSelectionModel().select(SerialPort.getCommPort(Target.camDescriptor));
-        else {
-            //display error message
+        for (int i = 0; i < SerialPort.getCommPorts().length; i++) {
+            if (Target.camDescriptor.equals(commPorts.get(i).getPortDescription())){
+                gunPortComboBox.getSelectionModel().select(SerialPort.getCommPort(Target.camDescriptor));
+            }
         }
         saveButton.setOnMouseClicked(mouseEvent -> {
             String s = targetNumberTextField.getText();
