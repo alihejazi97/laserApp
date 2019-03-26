@@ -70,11 +70,6 @@ public class TargetConfController implements Initializable,ControllerInterface {
         targets.clear();
     }
 
-    public void setTargets(List<Target> targets) {
-        this.targets = targets;
-
-    }
-
     void comboBoxConfiguration(){
         targetCombobox.setItems(FXCollections.observableList(targets));
         cameraComboBox.setItems(FXCollections.observableList(cameraControl.getCameraNames()));
@@ -94,6 +89,7 @@ public class TargetConfController implements Initializable,ControllerInterface {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        targets = GsonPersistence.load2();
         cameraControl = CameraControl.getInstance();
         targetButton.setOnMouseClicked(new EventHandler<>() {
             private SettingPersController controller;
@@ -132,7 +128,7 @@ public class TargetConfController implements Initializable,ControllerInterface {
                 selectedTarget.gunId = gunId;
             }
         });
-        bulletNumTextField.setOnMouseDragExited(mouseDragEvent -> {
+        bulletNumTextField.setOnAction(mouseDragEvent -> {
             if (StringUtils.isNumeric(bulletNumTextField.getText())){
                 int bulletNum = Integer.parseInt(bulletNumTextField.getText());
                 if (bulletNum > 0)
@@ -141,7 +137,17 @@ public class TargetConfController implements Initializable,ControllerInterface {
             }
 
         });
-        saveButton.setOnMouseClicked(mouseEvent -> GsonPersistence.persist2(targets));
+        saveButton.setOnMouseClicked(mouseEvent -> {
+            if (selectedTarget != null){
+                if (StringUtils.isNumeric(bulletNumTextField.getText())){
+                    int bulletNum = Integer.parseInt(bulletNumTextField.getText());
+                    if (bulletNum > 0)
+                        if (selectedTarget != null)
+                            selectedTarget.bulletNum = bulletNum;
+                }
+            }
+            GsonPersistence.persist2(targets);
+        });
     }
     int gunId;
     Target selectedTarget;

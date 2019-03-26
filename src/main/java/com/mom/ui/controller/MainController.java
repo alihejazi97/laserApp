@@ -109,7 +109,6 @@ public class MainController implements Initializable, ControllerInterface {
                 controller = ((TargetConfController) pair.getValue());
                 stage = pair.getKey();
                 stage.initModality(Modality.WINDOW_MODAL);
-                controller.setTargets(targets);
                 pair.getKey().show();
                 controller.afterShow();
             }
