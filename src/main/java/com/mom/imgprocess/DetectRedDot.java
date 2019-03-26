@@ -2,6 +2,7 @@ package com.mom.imgprocess;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import org.opencv.core.*;
@@ -10,6 +11,7 @@ import org.opencv.imgproc.Imgproc;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class DetectRedDot implements ChangeListener<Mat> {
     static {
@@ -41,6 +43,7 @@ public class DetectRedDot implements ChangeListener<Mat> {
         target = new Target();
         shotPoint = new ArrayList<>();
         points = new SimpleDoubleProperty();
+        score = new SimpleObjectProperty<>();
     }
 //
 //[ WARN:1] videoio(MSMF): OnReadSample() is called with error status: -1072873821
@@ -56,14 +59,32 @@ public class DetectRedDot implements ChangeListener<Mat> {
 
     public DoubleProperty points;
 
+    public String getScore() {
+        return score.get();
+    }
+
+    public SimpleObjectProperty<String> scoreProperty() {
+        return score;
+    }
+
+    public void setScore(String score) {
+        this.score.set(score);
+    }
+
+    private SimpleObjectProperty<String> score;
+
     @Override
     public void changed(ObservableValue<? extends Mat> observableValue, Mat o, Mat mat) {
         if (mat.empty()) {
             //print error
             return;
         }
-        if (test) {
+        if (test){
             test(mat);
+            return;
+        }
+        if (true) {
+            debug(mat);
             return;
         }
         Mat matCopy = mat.clone();
@@ -84,7 +105,7 @@ public class DetectRedDot implements ChangeListener<Mat> {
                 break;
             }
         }
-        Mat matShow = Imgcodecs.imread(getClass().getResource("/img/target.png").getPath().substring(1));
+       Mat matShow = mat.clone();
         System.out.println("checking countours : " + checkContours);
         if (checkContours) {
             Point point = new Point();
@@ -141,46 +162,49 @@ public class DetectRedDot implements ChangeListener<Mat> {
 //        show(matTest, showTest);
 //    }
 
+    public void debug(Mat mat){
+        Mat matCopy = mat.clone();
+        matCopy = cutImage(matCopy);
+        Imgproc.cvtColor(matCopy, matCopy, Imgproc.COLOR_BGR2GRAY);
+        reduceNoise(matCopy);
+        double ret = Imgproc.threshold(matCopy, matCopy, 245.0, 255.0, Imgproc.THRESH_TOZERO);
+        List<MatOfPoint> countours = new ArrayList<>();
+        Mat hierarchy = new Mat();
+        Imgproc.findContours(matCopy, countours, hierarchy, Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE);
+//        boolean checkContours = false;
+//        double max = 0;
+//        double threshholdContour = 10;
+//        for (int i = 0; i < countours.size(); i++) {
+//            max = Imgproc.contourArea(countours.get(i)) > max ? Imgproc.contourArea(countours.get(i)) : max;
+//            if (max > threshholdContour){
+//                checkContours = true;
+//                break;
+//            }
+//        }
+//        Mat matShow = mat.clone();
+//        System.out.println("checking countours : " + checkContours);
+//        if (checkContours){
+        Point point = new Point();
+        if (findDot(matCopy, point)) {
+            shotPoint.add(point.clone());
+            points.add(calculatePoint(point, new Point(matCopy.size().width, matCopy.size().height)));
+        }
+//            drawCircles(matShow,matCopy.size());
+//        }
+        Mat matShow = mat.clone();
+        matShow = cutImage(matShow);
+        System.out.println("countours number = " + countours.size());
+        for (int i = 0; i < countours.size(); i++) {
+            MatOfPoint countour = countours.get(i);
+            System.out.println("counter " + (i) + " area = " + Imgproc.contourArea(countour));
+            Imgproc.drawContours(matShow, countours, i, new Scalar((255 / (countours.size())) * (i + 1), 0, 0), 5);
+        }
+        show(matShow, show);
+    }
     public void test(Mat mat) {
         Mat matCopy = mat.clone();
         matCopy = cutImage(matCopy);
         show(matCopy, show);
-//        Mat matCopy = mat.clone();
-//        matCopy = cutImage(matCopy);
-//        Imgproc.cvtColor(matCopy, matCopy, Imgproc.COLOR_BGR2GRAY);
-//        reduceNoise(matCopy);
-//        double ret = Imgproc.threshold(matCopy, matCopy, 245.0, 255.0, Imgproc.THRESH_TOZERO);
-//        List<MatOfPoint> countours = new ArrayList<>();
-//        Mat hierarchy = new Mat();
-//        Imgproc.findContours(matCopy, countours, hierarchy, Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE);
-////        boolean checkContours = false;
-////        double max = 0;
-////        double threshholdContour = 10;
-////        for (int i = 0; i < countours.size(); i++) {
-////            max = Imgproc.contourArea(countours.get(i)) > max ? Imgproc.contourArea(countours.get(i)) : max;
-////            if (max > threshholdContour){
-////                checkContours = true;
-////                break;
-////            }
-////        }
-////        Mat matShow = mat.clone();
-////        System.out.println("checking countours : " + checkContours);
-////        if (checkContours){
-//        Point point = new Point();
-//        if (findDot(matCopy, point)) {
-//            shotPoint.add(point.clone());
-//            points.add(calculatePoint(point, new Point(matCopy.size().width, matCopy.size().height)));
-//        }
-////            drawCircles(matShow,matCopy.size());
-////        }
-//        Mat matShow = mat.clone();
-//        System.out.println("countours number = " + countours.size());
-//        for (int i = 0; i < countours.size(); i++) {
-//            MatOfPoint countour = countours.get(i);
-//            System.out.println("counter " + (i) + " area = " + Imgproc.contourArea(countour));
-//            Imgproc.drawContours(matShow, countours, i, new Scalar((255 / (countours.size())) * (i + 1), 0, 0), 5);
-//        }
-//        show(matShow, show);
     }
 
     private void applyMask(Mat mat, Mat mask) {

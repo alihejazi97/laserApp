@@ -95,7 +95,7 @@ public class SettingPersController implements Initializable, ControllerInterface
     public void shutdown() {
         if (webcam != null) {
             webcam.setShow(false);
-            webcam.stopCamera();
+            webcam.setImageView(null);
         }
     }
 
@@ -128,13 +128,11 @@ public class SettingPersController implements Initializable, ControllerInterface
             webcam.setImageView(null);
             webcam.setShow(false);
             webcam.removeListener(detectRedDot);
-            webcam.stopCamera();
         }
-        if (camName != null) {
+        if (camName != null && cameraControl.getCamera(camName) != null) {
             webcam = cameraControl.getCamera(camName);
             webcam.setImageView(imgVRaw);
             webcam.setShow(true);
-            webcam.startCamera();
             webcam.addListener(detectRedDot);
         }
     }
@@ -234,17 +232,26 @@ public class SettingPersController implements Initializable, ControllerInterface
                 circles.get(i).setVisible(true);
                 lines.get(i).setVisible(true);
             }
-            if (!cameraComboBox.getItems().contains(selectedTarget.webCamName)) {
-                updateCamera(null);
-                cameraComboBox.getSelectionModel().clearSelection();
+            cameraComboBox.getSelectionModel().clearSelection();
+            if (selectedTarget.webCamName != null){
+                for (String s:
+                     cameraComboBox.getItems()) {
+                    if (selectedTarget.webCamName.equals(s)) {
+                        cameraComboBox.getSelectionModel().select(s);
+                        break;
+                    }
+                }
             }
         });
         cameraComboBox.getSelectionModel().selectedIndexProperty().addListener((observableValue, oldVal, newVal) -> {
             if (selectedTarget == null) {
                 //show error message
             } else {
-                updateCamera(cameraComboBox.getValue());
-                selectedTarget.webCamName = cameraComboBox.getValue();
+                if (selectedTarget.webCamName != null) {
+                    updateCamera(cameraComboBox.getValue());
+                    if (cameraComboBox.getValue() != null)
+                        selectedTarget.webCamName = cameraComboBox.getValue();
+                }
             }
         });
         saveButton.setOnMouseClicked(mouseEvent -> {

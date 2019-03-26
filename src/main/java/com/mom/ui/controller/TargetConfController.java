@@ -68,7 +68,6 @@ public class TargetConfController implements Initializable,ControllerInterface {
     @Override
     public void shutdown() {
         targets.clear();
-        targets = GsonPersistence.load2();
     }
 
     public void setTargets(List<Target> targets) {
@@ -119,8 +118,11 @@ public class TargetConfController implements Initializable,ControllerInterface {
                     if (target.gunId == gunId){
                         targetCombobox.getSelectionModel().select(gunId);
                         bulletNumTextField.setText(Integer.toString(target.bulletNum));
+                        return;
                     }
                 }
+                bulletNumTextField.setText(Integer.toString(13));
+
             }
         });
         targetCombobox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Target>() {

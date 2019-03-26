@@ -89,11 +89,6 @@ class OpenCVWebCam implements WebcamInterface{
                     System.err.println("Impossible to open the camera connection...");
             }
         }
-        else
-        {
-            this.active = false;
-            this.stopAcquisition();
-        }
     }
 
     public void setImageView(ImageView imageView) {

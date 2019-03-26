@@ -2,6 +2,7 @@
 package com.mom.ui.controller;
 
 import com.mom.BoardConnection.Arduino;
+import com.mom.cam.CameraControl;
 import com.mom.imgprocess.DetectRedDot;
 import com.mom.imgprocess.Target;
 import com.mom.persistence.GsonPersistence;
@@ -16,6 +17,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.util.Pair;
 
 import java.io.IOException;
@@ -42,6 +44,8 @@ public class MainController implements Initializable, ControllerInterface {
 
     public Arduino arduino;
 
+    public CameraControl cameraControl;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         arduino = Arduino.getInstance();
@@ -50,12 +54,13 @@ public class MainController implements Initializable, ControllerInterface {
         stages = new ArrayList<>();
         targets = GsonPersistence.load2();
         System.out.println(Target.TARGET_NUMBER);
-
+        cameraControl = CameraControl.getInstance();
         preferencesMenuItem.setOnAction(new EventHandler<ActionEvent>() {
             preferenceControl controller;
             Stage stage;
             @Override
             public void handle(ActionEvent actionEvent) {
+                closeTargetWindows();
                 Pair<Stage, ControllerInterface> pair = loadLayoutController("preference.fxml");
                 controller = ((preferenceControl) pair.getValue());
                 stage = pair.getKey();
@@ -72,7 +77,15 @@ public class MainController implements Initializable, ControllerInterface {
             public void handle(MouseEvent mouseEvent) {
                 initializeDetection();
                 Stage stage;
-                for (int i = 0; i < Target.TARGET_NUMBER; i++) {
+                 for (int i = 0; i < Target.TARGET_NUMBER; i++) {
+                    if (!(targets.get(i).valid)){
+                        //show error
+                        continue;
+                    }
+                    if (cameraControl.getCamera(targets.get(i).webCamName) == null){
+                        //show error
+                        continue;
+                    }
                     Pair<Stage, ControllerInterface> pair = loadLayoutController("target.fxml");
                     controller = ((TargetController) pair.getValue());
                     stage = pair.getKey();
@@ -91,6 +104,7 @@ public class MainController implements Initializable, ControllerInterface {
 
             @Override
             public void handle(ActionEvent actionEvent) {
+                closeTargetWindows();
                 Pair<Stage, ControllerInterface> pair = loadLayoutController("targetConf.fxml");
                 controller = ((TargetConfController) pair.getValue());
                 stage = pair.getKey();
@@ -102,7 +116,16 @@ public class MainController implements Initializable, ControllerInterface {
         });
     }
 
+
+    private void closeTargetWindows(){
+        for (Stage stage:
+             stages) {
+            stage.close();
+        }
+    }
+
     private void initializeDetection() {
+        targets = GsonPersistence.load2();
         for (int i = 0; i < Target.TARGET_NUMBER; i++) {
             DetectRedDot detectRedDot = new DetectRedDot();
             detectRedDot.target = targets.get(i);

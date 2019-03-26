@@ -26,7 +26,9 @@ public class CameraControl{
     private void getOpenCvWebCams(){
         List<Webcam> webCamList = Webcam.getWebcams();
         for (int i = 0; i < webCamList.size(); i++) {
-            webcams.put(webCamList.get(i).getName(),new OpenCVWebCam(i));
+            WebcamInterface webCam= new OpenCVWebCam(i);
+            webCam.startCamera();
+            webcams.put(webCamList.get(i).getName(),webCam);
             cameraNames.add(webCamList.get(i).getName());
         }
     }
@@ -53,4 +55,9 @@ public class CameraControl{
         return cameraNames;
     }
 
+    @Override
+    protected void finalize() throws Throwable {
+        webcams.keySet().forEach(s -> webcams.get(s).stopCamera());
+        super.finalize();
+    }
 }

@@ -3,6 +3,7 @@ package com.mom.ui.controller;
 import com.mom.cam.CameraControl;
 import com.mom.imgprocess.DetectRedDot;
 import com.mom.cam.WebcamInterface;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
@@ -35,10 +36,23 @@ public class TargetController implements Initializable, ControllerInterface {
         this.detectRedDot = detectRedDot;
         detectRedDot.show.setImageView(imgVTarget);
         detectRedDot.show.setShow(true);
-        WebcamInterface webcamInterface = cameraControl.getCamera(detectRedDot.target.webCamName);
-        webcamInterface.startCamera();
-        webcamInterface.addListener(detectRedDot);
-        detectRedDot.points.addListener((observableValue, number, t1) -> scoreText.setText(t1.toString()));
+        afterShow();
+    }
+
+    WebcamInterface webcamInterface;
+
+    public void afterShow(){
+         webcamInterface = cameraControl.getCamera(detectRedDot.target.webCamName);
+        if (webcamInterface != null)
+        {
+            webcamInterface.startCamera();
+            webcamInterface.addListener(detectRedDot);
+            detectRedDot.points.addListener((observableValue, number, t1) -> scoreText.setText(t1.toString()));
+        }
+        gunText.setText(Integer.toString(detectRedDot.target.gunId));
+        numBulletText.setText(Integer.toString(detectRedDot.target.bulletNum));
+        targetText.setText(detectRedDot.target.name);
+        scoreText.textProperty().bind(detectRedDot.scoreProperty());
     }
 
     @Override
@@ -49,6 +63,8 @@ public class TargetController implements Initializable, ControllerInterface {
     }
 
     public void shutdown(){
-
+        if (webcamInterface != null){
+            webcamInterface.removeListener(detectRedDot);
+        }
     }
 }
