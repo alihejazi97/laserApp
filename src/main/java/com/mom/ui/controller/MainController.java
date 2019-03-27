@@ -40,7 +40,7 @@ public class MainController implements Initializable, ControllerInterface {
 
     private List<Stage> stages;
 
-    public List<Target> targets;
+    public static List<Target> targets;
 
     public Arduino arduino;
 
@@ -48,11 +48,11 @@ public class MainController implements Initializable, ControllerInterface {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        targets = GsonPersistence.load2();
         arduino = Arduino.getInstance();
-        targets = new ArrayList<>();
         detectRedDots = new ArrayList<>();
         stages = new ArrayList<>();
-        targets = GsonPersistence.load2();
+        arduino.startShooting();
         System.out.println(Target.TARGET_NUMBER);
         cameraControl = CameraControl.getInstance();
         preferencesMenuItem.setOnAction(new EventHandler<ActionEvent>() {
@@ -86,14 +86,14 @@ public class MainController implements Initializable, ControllerInterface {
                         //show error
                         continue;
                     }
+
                     Pair<Stage, ControllerInterface> pair = loadLayoutController("target.fxml");
                     controller = ((TargetController) pair.getValue());
                     stage = pair.getKey();
-                    DetectRedDot detectRedDot = new DetectRedDot();
-                    detectRedDot.target = targets.get(i);
-                    controller.setDetectRedDot(detectRedDot);                                                      
+                    controller.setDetectRedDot(detectRedDots.get(i));
                     stages.add(stage);
                     stage.show();
+                    arduino.setActive(true);
                 }
             }
         });
@@ -127,7 +127,7 @@ public class MainController implements Initializable, ControllerInterface {
         targets = GsonPersistence.load2();
         for (int i = 0; i < Target.TARGET_NUMBER; i++) {
             DetectRedDot detectRedDot = new DetectRedDot();
-            detectRedDot.target = targets.get(i);
+            detectRedDot.setIndex(i);
             detectRedDots.add(detectRedDot);
         }
     }

@@ -70,8 +70,6 @@ public class Target {
         point3 = new Point();
         valid = false;
         gunId = 0;
-        webCamName = "empty";
-        camDescriptor = "empty";
         bulletNum = 13;
     }
 

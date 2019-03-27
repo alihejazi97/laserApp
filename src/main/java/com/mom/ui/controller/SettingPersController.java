@@ -109,6 +109,7 @@ public class SettingPersController implements Initializable, ControllerInterface
         selectedTarget.point3.x = (circles.get(3).getCenterX() + circles.get(3).getTranslateX() - originX) / imgVRaw.getFitWidth();
         selectedTarget.point3.y = (circles.get(3).getCenterY() + circles.get(3).getTranslateY() - originY) / imgVRaw.getFitHeight();
         selectedTarget.valid = true;
+        detectRedDot.target = selectedTarget;
     }
 
     private void updateInvalidTargetPoints() {
@@ -212,7 +213,6 @@ public class SettingPersController implements Initializable, ControllerInterface
         circles.get(2).setTranslateY((target.point2.y * imgVRaw.getFitHeight()) - circles.get(2).getCenterY() + originY);
         circles.get(3).setTranslateX((target.point3.x * imgVRaw.getFitWidth()) - circles.get(3).getCenterX() + originX);
         circles.get(3).setTranslateY((target.point3.y * imgVRaw.getFitHeight()) - circles.get(3).getCenterY() + originY);
-        updateDetectRedDotTest();
     }
 
     @Override
@@ -228,6 +228,7 @@ public class SettingPersController implements Initializable, ControllerInterface
                 updateInvalidTargetPoints();
             }
             updateCircles(selectedTarget);
+            updateDetectRedDotTest();
             for (int i = 0; i < circles.size(); i++) {
                 circles.get(i).setVisible(true);
                 lines.get(i).setVisible(true);

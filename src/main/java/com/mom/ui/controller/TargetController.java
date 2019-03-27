@@ -3,6 +3,7 @@ package com.mom.ui.controller;
 import com.mom.cam.CameraControl;
 import com.mom.imgprocess.DetectRedDot;
 import com.mom.cam.WebcamInterface;
+import com.mom.imgprocess.Target;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -42,16 +43,17 @@ public class TargetController implements Initializable, ControllerInterface {
     WebcamInterface webcamInterface;
 
     public void afterShow(){
-         webcamInterface = cameraControl.getCamera(detectRedDot.target.webCamName);
+        Target target = MainController.targets.get(detectRedDot.getIndex());
+        webcamInterface = cameraControl.getCamera(target.getWebCamName());
         if (webcamInterface != null)
         {
             webcamInterface.startCamera();
             webcamInterface.addListener(detectRedDot);
-            detectRedDot.points.addListener((observableValue, number, t1) -> scoreText.setText(t1.toString()));
+            scoreText.textProperty().bind(detectRedDot.scoreProperty());
         }
-        gunText.setText(Integer.toString(detectRedDot.target.gunId));
-        numBulletText.setText(Integer.toString(detectRedDot.target.bulletNum));
-        targetText.setText(detectRedDot.target.name);
+        gunText.setText(Integer.toString(target.gunId));
+        numBulletText.setText(Integer.toString(target.bulletNum));
+        targetText.setText(target.name);
         scoreText.textProperty().bind(detectRedDot.scoreProperty());
     }
 

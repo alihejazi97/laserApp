@@ -1,10 +1,12 @@
 package com.mom.imgprocess;
 
+import com.mom.ui.controller.MainController;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import org.apache.commons.lang3.StringUtils;
 import org.opencv.core.*;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
@@ -26,6 +28,16 @@ public class DetectRedDot implements ChangeListener<Mat> {
     public ArrayList<Point> shotPoint;
     private boolean applyColorFilter = true;
 
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
+    }
+
+    private int index;
+
     public void setTest(boolean test) {
         this.test = test;
     }
@@ -42,7 +54,6 @@ public class DetectRedDot implements ChangeListener<Mat> {
         circles = new ArrayList<>();
         target = new Target();
         shotPoint = new ArrayList<>();
-        points = new SimpleDoubleProperty();
         score = new SimpleObjectProperty<>();
     }
 //
@@ -56,8 +67,6 @@ public class DetectRedDot implements ChangeListener<Mat> {
         dest.x = result.maxLoc.y;
         return true;
     }
-
-    public DoubleProperty points;
 
     public String getScore() {
         return score.get();
@@ -83,10 +92,16 @@ public class DetectRedDot implements ChangeListener<Mat> {
             test(mat);
             return;
         }
-        if (true) {
+        if (index < MainController.targets.size())
+            target = MainController.targets.get(index);
+        else
+            return;
+        if (false) {
             debug(mat);
             return;
         }
+        if (!target.active)
+            return;
         Mat matCopy = mat.clone();
         matCopy = cutImage(matCopy);
         Imgproc.cvtColor(matCopy, matCopy, Imgproc.COLOR_BGR2GRAY);
@@ -105,13 +120,16 @@ public class DetectRedDot implements ChangeListener<Mat> {
                 break;
             }
         }
-       Mat matShow = mat.clone();
+        Mat matShow = mat.clone();
+        matShow = cutImage(matShow);
         System.out.println("checking countours : " + checkContours);
         if (checkContours) {
             Point point = new Point();
             if (findDot(matCopy, point)) {
                 shotPoint.add(point.clone());
-                points.add(calculatePoint(point, new Point(matCopy.size().width, matCopy.size().height)));
+                int points = Integer.parseInt(score.getValue());
+                points += calculatePoint(point, new Point(matCopy.size().width, matCopy.size().height));
+                score.setValue(Integer.toString(points));
             }
             drawCircles(matShow, matCopy.size());
         }
@@ -184,11 +202,6 @@ public class DetectRedDot implements ChangeListener<Mat> {
 //        Mat matShow = mat.clone();
 //        System.out.println("checking countours : " + checkContours);
 //        if (checkContours){
-        Point point = new Point();
-        if (findDot(matCopy, point)) {
-            shotPoint.add(point.clone());
-            points.add(calculatePoint(point, new Point(matCopy.size().width, matCopy.size().height)));
-        }
 //            drawCircles(matShow,matCopy.size());
 //        }
         Mat matShow = mat.clone();
