@@ -17,7 +17,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import javafx.util.Pair;
 
 import java.io.IOException;
@@ -32,7 +31,7 @@ public class MainController implements Initializable, ControllerInterface {
     private Button shooting0Button, shooting1Button, shooting2Button;
 
     @FXML
-    private MenuItem targetMenuItem,advanceSettingMenuItem,preferencesMenuItem;
+    private MenuItem targetMenuItem, advanceSettingMenuItem, preferencesMenuItem, gunMenuItem;
 
     private FXMLLoader fxmlLoader;
 
@@ -55,9 +54,26 @@ public class MainController implements Initializable, ControllerInterface {
         arduino.startShooting();
         System.out.println(Target.TARGET_NUMBER);
         cameraControl = CameraControl.getInstance();
+
+        gunMenuItem.setOnAction(new EventHandler<ActionEvent>() {
+            private SettingPersController controller;
+
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                closeTargetWindows();
+                Pair<Stage, ControllerInterface> pair = loadLayoutController("settingPers.fxml");
+                controller = ((SettingPersController) pair.getValue());
+                controller.setDetectRedDot(new DetectRedDot());
+                pair.getKey().initModality(Modality.APPLICATION_MODAL);
+                pair.getKey().show();
+                controller.afterShow();
+            }
+        });
+
         preferencesMenuItem.setOnAction(new EventHandler<ActionEvent>() {
             preferenceControl controller;
             Stage stage;
+
             @Override
             public void handle(ActionEvent actionEvent) {
                 closeTargetWindows();
@@ -65,7 +81,7 @@ public class MainController implements Initializable, ControllerInterface {
                 controller = ((preferenceControl) pair.getValue());
                 stage = pair.getKey();
                 stages.add(stage);
-                stage.initModality(Modality.WINDOW_MODAL);
+                stage.initModality(Modality.APPLICATION_MODAL);
                 stage.show();
                 controller.setTargets(targets);
             }
@@ -73,16 +89,17 @@ public class MainController implements Initializable, ControllerInterface {
 
         shooting0Button.setOnMouseClicked(new EventHandler<MouseEvent>() {
             TargetController controller;
+
             @Override
             public void handle(MouseEvent mouseEvent) {
                 initializeDetection();
                 Stage stage;
-                 for (int i = 0; i < Target.TARGET_NUMBER; i++) {
-                    if (!(targets.get(i).valid)){
+                for (int i = 0; i < Target.TARGET_NUMBER; i++) {
+                    if (!(targets.get(i).valid)) {
                         //show error
                         continue;
                     }
-                    if (cameraControl.getCamera(targets.get(i).webCamName) == null){
+                    if (cameraControl.getCamera(targets.get(i).webCamName) == null) {
                         //show error
                         continue;
                     }
@@ -108,7 +125,7 @@ public class MainController implements Initializable, ControllerInterface {
                 Pair<Stage, ControllerInterface> pair = loadLayoutController("targetConf.fxml");
                 controller = ((TargetConfController) pair.getValue());
                 stage = pair.getKey();
-                stage.initModality(Modality.WINDOW_MODAL);
+                stage.initModality(Modality.APPLICATION_MODAL);
                 pair.getKey().show();
                 controller.afterShow();
             }
@@ -116,9 +133,9 @@ public class MainController implements Initializable, ControllerInterface {
     }
 
 
-    private void closeTargetWindows(){
-        for (Stage stage:
-             stages) {
+    private void closeTargetWindows() {
+        for (Stage stage :
+                stages) {
             stage.close();
         }
     }

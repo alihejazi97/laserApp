@@ -55,8 +55,12 @@ public class CameraControl{
         return cameraNames;
     }
 
+    public void stopCameras(){webcams.keySet().forEach(s -> webcams.get(s).stopCamera());
+    }
+
     @Override
     protected void finalize() throws Throwable {
+        System.out.println("i am hereeeeee");
         webcams.keySet().forEach(s -> webcams.get(s).stopCamera());
         super.finalize();
     }

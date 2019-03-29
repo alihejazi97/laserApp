@@ -1,7 +1,6 @@
 package com.mom.persistence;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.google.gson.*;
 import com.mom.cam.CameraControl;
 import com.mom.imgprocess.Target;
 
@@ -24,14 +23,18 @@ public class GsonPersistence {
         File file = new File("./settingTarget.json");
         try {
             if (file.createNewFile()) {
-                System.out.println("creating the file.");
+                System.out.println("creating file");
             }
-            System.out.println("object size" + objects.size());
             GsonBuilder gsonBuilder = new GsonBuilder();
-            gsonBuilder.excludeFieldsWithModifiers(java.lang.reflect.Modifier.TRANSIENT);
             Gson gson = gsonBuilder.create();
+            JsonElement element = gson.toJsonTree(objects);
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("GUN_NUMBER",Target.GUN_NUMBER);
+            jsonObject.addProperty("camDescriptor",Target.camDescriptor);
+            jsonObject.addProperty("TARGET_NUMBER",Target.TARGET_NUMBER);
+            jsonObject.add("targets",element);
             FileWriter writer = new FileWriter(file);
-            gson.toJson(objects, writer);
+            gson.toJson(jsonObject,writer);
             writer.close();
         } catch (IOException e) {
         }
@@ -66,16 +69,20 @@ public class GsonPersistence {
             }
             System.out.println("file has been loaded.");
             GsonBuilder gsonBuilder = new GsonBuilder();
-            gsonBuilder.excludeFieldsWithModifiers(java.lang.reflect.Modifier.TRANSIENT);
             Gson gson = gsonBuilder.create();
             FileReader reader = new FileReader(file);
-            Target[] Targets = gson.fromJson(reader, Target[].class);
-            if (Targets == null || Targets.length == 0) {
-                makeDefaultTargets(targets);
-            } else {
-                for (int i = 0; i < Targets.length; i++) {
-                    targets.add(Targets[i]);
-                }
+            JsonParser jsonParser = new JsonParser();
+            JsonObject jsonObject = ((JsonObject) jsonParser.parse(reader));
+            JsonArray jsonArray = jsonObject.getAsJsonArray("targets");
+            Target[] Targets = gson.fromJson(jsonArray,Target[].class);
+            JsonElement element = jsonObject.get("GUN_NUMBER");
+            Target.GUN_NUMBER = gson.fromJson(element,Integer.class);
+            element = jsonObject.get("camDescriptor");
+            Target.camDescriptor = gson.fromJson(element,String.class);
+            element = jsonObject.get("TARGET_NUMBER");
+            Target.TARGET_NUMBER = gson.fromJson(element,Integer.class);
+            for (int i = 0; i < Targets.length; i++) {
+                targets.add(Targets[i]);
             }
             reader.close();
             return targets;

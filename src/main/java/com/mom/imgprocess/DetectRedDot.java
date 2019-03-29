@@ -1,19 +1,14 @@
 package com.mom.imgprocess;
 
 import com.mom.ui.controller.MainController;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import org.apache.commons.lang3.StringUtils;
 import org.opencv.core.*;
-import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class DetectRedDot implements ChangeListener<Mat> {
     static {
@@ -64,7 +59,7 @@ public class DetectRedDot implements ChangeListener<Mat> {
         if (Math.abs(result.maxVal) < 1)
             return false;
         dest.x = result.maxLoc.x;
-        dest.x = result.maxLoc.y;
+        dest.y = result.maxLoc.y;
         return true;
     }
 
@@ -127,12 +122,14 @@ public class DetectRedDot implements ChangeListener<Mat> {
             Point point = new Point();
             if (findDot(matCopy, point)) {
                 shotPoint.add(point.clone());
-                int points = Integer.parseInt(score.getValue());
-                points += calculatePoint(point, new Point(matCopy.size().width, matCopy.size().height));
-                score.setValue(Integer.toString(points));
+//                int points = 0;
+//                if (StringUtils.isNumeric(score.getValue()))
+//                    points = Integer.parseInt(score.getValue());
+//                points += calculatePoint(point, new Point(matCopy.size().width, matCopy.size().height));
+//                score.setValue(Integer.toString(points));
             }
-            drawCircles(matShow, matCopy.size());
         }
+        drawCircles(matShow, matShow.size());
         show(matShow, show);
     }
 
@@ -168,6 +165,7 @@ public class DetectRedDot implements ChangeListener<Mat> {
             return 2;
         else return 1;
     }
+
 
 //    public void test(Mat mat) {
 //        Mat matTest = mat.clone();

@@ -40,11 +40,6 @@ public class SettingPersController implements Initializable, ControllerInterface
 
     Target selectedTarget;
 
-    public void setTargets(List<Target> Targets) {
-        this.targets = Targets;
-        targetComboBox.setItems(FXCollections.observableList(targets));
-    }
-
     WebcamInterface webcam;
 
     private List<Target> targets;
@@ -221,6 +216,8 @@ public class SettingPersController implements Initializable, ControllerInterface
         circles = new ArrayList<>();
         cameraControl = CameraControl.getInstance();
         cameraComboBox.setItems(FXCollections.observableList(cameraControl.getCameraNames()));
+        targets = GsonPersistence.load2();
+        targetComboBox.setItems(FXCollections.observableList(targets));
         targetComboBox.getSelectionModel().selectedIndexProperty().addListener((observableValue, oldVal, newVal) -> {
             selectedTarget = targets.get(newVal.intValue());
             detectRedDot.target = selectedTarget;

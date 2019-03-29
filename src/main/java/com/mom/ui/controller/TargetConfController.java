@@ -61,9 +61,7 @@ public class TargetConfController implements Initializable,ControllerInterface {
     TableColumn<Target,String> cameraColumn;
 
     @FXML
-    Button targetButton,saveButton;
-
-    FXMLLoader fxmlLoader;
+    Button saveButton;
 
     @Override
     public void shutdown() {
@@ -91,20 +89,7 @@ public class TargetConfController implements Initializable,ControllerInterface {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         targets = GsonPersistence.load2();
         cameraControl = CameraControl.getInstance();
-        targetButton.setOnMouseClicked(new EventHandler<>() {
-            private SettingPersController controller;
 
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                Pair<Stage, ControllerInterface> pair = loadLayoutController("settingPers.fxml");
-                controller = ((SettingPersController) pair.getValue());
-                controller.setTargets(targets);
-                controller.setDetectRedDot(new DetectRedDot());
-                pair.getKey().setAlwaysOnTop(true);
-                pair.getKey().show();
-                controller.afterShow();
-            }
-        });
         gunCombobox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener() {
             @Override
             public void changed(ObservableValue observableValue, Object o, Object t1) {
@@ -161,22 +146,4 @@ public class TargetConfController implements Initializable,ControllerInterface {
     }
 
     List<Integer> guns;
-
-    private Pair<Stage, ControllerInterface> loadLayoutController(String resourceName) {
-        fxmlLoader = new FXMLLoader();
-        fxmlLoader.setLocation(getClass().getResource("/fxml/" + resourceName));
-        AnchorPane pane = null;
-        try {
-            pane = fxmlLoader.load();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        ControllerInterface controller = fxmlLoader.getController();
-        Scene scene = new Scene(pane);
-        Stage stage = new Stage();
-        stage.setOnCloseRequest(windowEvent -> controller.shutdown());
-        stage.setScene(scene);
-        return new Pair<>(stage, controller);
-    }
-
 }

@@ -1,4 +1,5 @@
 package com.mom.ui;
+import com.mom.cam.CameraControl;
 import com.mom.ui.controller.MainController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -22,5 +23,12 @@ public class App extends Application {
         stage.setOnCloseRequest(windowEvent -> mainController.shutdown());
         stage.setScene(scene);
         stage.show();
+    }
+
+    @Override
+    public void stop() throws Exception {
+        CameraControl cameraControl = CameraControl.getInstance();
+        cameraControl.stopCameras();
+        super.stop();
     }
 }
