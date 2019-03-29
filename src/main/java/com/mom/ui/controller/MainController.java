@@ -55,13 +55,13 @@ public class MainController implements Initializable, ControllerInterface {
         System.out.println(Target.TARGET_NUMBER);
         cameraControl = CameraControl.getInstance();
 
-        gunMenuItem.setOnAction(new EventHandler<ActionEvent>() {
+        targetMenuItem.setOnAction(new EventHandler<ActionEvent>() {
             private SettingPersController controller;
 
             @Override
             public void handle(ActionEvent actionEvent) {
                 closeTargetWindows();
-                Pair<Stage, ControllerInterface> pair = loadLayoutController("settingPers.fxml");
+                Pair<Stage, ControllerInterface> pair = loadLayoutController("settingTarget.fxml");
                 controller = ((SettingPersController) pair.getValue());
                 controller.setDetectRedDot(new DetectRedDot());
                 pair.getKey().initModality(Modality.APPLICATION_MODAL);
@@ -115,14 +115,14 @@ public class MainController implements Initializable, ControllerInterface {
             }
         });
 
-        targetMenuItem.setOnAction(new EventHandler<>() {
+        gunMenuItem.setOnAction(new EventHandler<>() {
             private TargetConfController controller;
             Stage stage;
 
             @Override
             public void handle(ActionEvent actionEvent) {
                 closeTargetWindows();
-                Pair<Stage, ControllerInterface> pair = loadLayoutController("targetConf.fxml");
+                Pair<Stage, ControllerInterface> pair = loadLayoutController("settingGun.fxml");
                 controller = ((TargetConfController) pair.getValue());
                 stage = pair.getKey();
                 stage.initModality(Modality.APPLICATION_MODAL);

@@ -30,9 +30,9 @@
                   <Menu fx:id="setting" mnemonicParsing="false" text="تنظیمات">
                      <items>
                         <MenuItem fx:id="advanceSettingMenuItem" mnemonicParsing="false" text="تنظیمات پیشرفته" />
-                        <MenuItem fx:id="targetMenuItem" mnemonicParsing="false" text="تنظیم سیبل" />
+                        <MenuItem fx:id="gunMenuItem" mnemonicParsing="false" text="تنظیم اسلحه" />
                         <MenuItem fx:id="preferencesMenuItem" mnemonicParsing="false" text="پیش فرض ها" />
-                        <MenuItem fx:id="gunMenuItem" mnemonicParsing="false" text="تنظیمات اسلحه" />
+                        <MenuItem fx:id="targetMenuItem" mnemonicParsing="false" text="تنظیم سیبل" />
                      </items>
                   </Menu>
                 <Menu mnemonicParsing="false" text="راهنما">
