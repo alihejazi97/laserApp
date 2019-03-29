@@ -1,7 +1,10 @@
 package com.mom.imgprocess;
 
 import com.mom.ui.controller.MainController;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import org.apache.commons.lang3.StringUtils;
@@ -49,7 +52,7 @@ public class DetectRedDot implements ChangeListener<Mat> {
         circles = new ArrayList<>();
         target = new Target();
         shotPoint = new ArrayList<>();
-        score = new SimpleObjectProperty<>();
+        score = new SimpleStringProperty();
     }
 //
 //[ WARN:1] videoio(MSMF): OnReadSample() is called with error status: -1072873821
@@ -67,7 +70,7 @@ public class DetectRedDot implements ChangeListener<Mat> {
         return score.get();
     }
 
-    public SimpleObjectProperty<String> scoreProperty() {
+    public StringProperty scoreProperty() {
         return score;
     }
 
@@ -75,7 +78,7 @@ public class DetectRedDot implements ChangeListener<Mat> {
         this.score.set(score);
     }
 
-    private SimpleObjectProperty<String> score;
+    private StringProperty score;
 
     @Override
     public void changed(ObservableValue<? extends Mat> observableValue, Mat o, Mat mat) {
@@ -122,11 +125,12 @@ public class DetectRedDot implements ChangeListener<Mat> {
             Point point = new Point();
             if (findDot(matCopy, point)) {
                 shotPoint.add(point.clone());
-//                int points = 0;
-//                if (StringUtils.isNumeric(score.getValue()))
-//                    points = Integer.parseInt(score.getValue());
-//                points += calculatePoint(point, new Point(matCopy.size().width, matCopy.size().height));
-//                score.setValue(Integer.toString(points));
+                int points = 0;
+                if (StringUtils.isNumeric(score.getValue()))
+                    points = Integer.parseInt(score.getValue());
+                points += calculatePoint(point, new Point(matCopy.size().width, matCopy.size().height));
+                final int finalPoints = points;
+                Platform.runLater(() -> score.setValue(Integer.toString(finalPoints)));
             }
         }
         drawCircles(matShow, matShow.size());
