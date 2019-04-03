@@ -1,4 +1,5 @@
 package com.mom.ui;
+import com.mom.BoardConnection.Arduino;
 import com.mom.cam.CameraControl;
 import com.mom.ui.controller.MainController;
 import javafx.application.Application;
@@ -19,7 +20,7 @@ public class App extends Application {
         fxmlLoader.setLocation(getClass().getResource("/fxml/main.fxml"));
         pane = fxmlLoader.load();
         mainController = fxmlLoader.getController();
-        scene = new Scene(pane,pane.getWidth(),pane.getHeight());
+        scene = new Scene(pane);
         stage.setOnCloseRequest(windowEvent -> mainController.shutdown());
         stage.setScene(scene);
         stage.show();

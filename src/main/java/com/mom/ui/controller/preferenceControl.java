@@ -8,10 +8,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Modality;
 import org.apache.commons.lang3.StringUtils;
 
@@ -42,7 +39,10 @@ public class preferenceControl implements Initializable,ControllerInterface {
     ComboBox gunPortComboBox;
 
     @FXML
-    TextField gunNumberTextField,targetNumberTextField;
+    TextField gunNumberTextField,targetNumberTextField,ipcameraTextField;
+
+    @FXML
+    ListView ipcameraListView;
 
     @Override
     public void shutdown() {
@@ -116,7 +116,6 @@ public class preferenceControl implements Initializable,ControllerInterface {
                     targets.add(target);
                 }
             }
-            System.out.println("i am here" );
             GsonPersistence.persist2(targets);
         });
     }

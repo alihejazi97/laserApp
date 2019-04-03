@@ -1,5 +1,6 @@
 package com.mom;
 import com.mom.ui.App;
+import com.mom.ui.FxMediaExample1;
 import javafx.application.Application;
 
 public class Main {

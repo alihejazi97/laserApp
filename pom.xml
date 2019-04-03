@@ -24,7 +24,13 @@
     <dependencies>
 
         <dependency>
-            <groupId> org.apache.cassandra</groupId>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-media</artifactId>
+            <version>12</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.cassandra</groupId>
             <artifactId>cassandra-all</artifactId>
             <version>0.8.1</version>
             <scope>test

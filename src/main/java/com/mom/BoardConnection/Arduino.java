@@ -4,17 +4,20 @@ import com.fazecast.jSerialComm.SerialPort;
 import com.fazecast.jSerialComm.SerialPortDataListener;
 import com.fazecast.jSerialComm.SerialPortEvent;
 import com.mom.imgprocess.Target;
-import com.mom.persistence.GsonPersistence;
+import javafx.scene.media.AudioClip;
 import com.mom.ui.controller.MainController;
 import javafx.scene.control.Alert;
 import javafx.stage.Modality;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class Arduino {
+
+    public AudioClip audioClip;
 
     public boolean isActive() {
         return active;
@@ -31,6 +34,13 @@ public class Arduino {
 
     private Arduino() {
         activeTargets = new HashMap<>();
+        final URL resource = getClass().getResource("/sound/Gun.mp3");
+        audioClip = new AudioClip(resource.toExternalForm());
+        audioClip.setVolume(0);
+        audioClip.setRate(1);
+        audioClip.setCycleCount(1);
+        audioClip.play();
+        audioClip.setVolume(1);
     }
 
     public static Arduino getInstance() {
@@ -71,6 +81,8 @@ public class Arduino {
                     return;
                 activeTargets.clear();
                 for (int i = 0; i < MainController.targets.size(); i++) {
+                    if (!MainController.targets.get(i).active)
+                        continue;
                     if (activeTargets.containsKey(MainController.targets.get(i).gunId)) {
                         activeTargets.get(MainController.targets.get(i).gunId).add(MainController.targets.get(i));
                     } else {
@@ -85,10 +97,11 @@ public class Arduino {
                     int count = 0;
                     for (int i = 1; i <= 128; i *= 2) {
                         if (activeTargets.containsKey(count) && (newData[newData.length - 1] & i) != 0) {
+                            audioClip.play();
                             List<Target> targets = activeTargets.get(count);
                             for (int j = 0; j < targets.size(); j++) {
                                 System.out.println("gun" + count + " shoot in target " + targets.get(j).name);
-                                targets.get(j).setActive(true);
+                                targets.get(j).setGunSignal(true);
                             }
                         }
                         count++;
@@ -98,5 +111,4 @@ public class Arduino {
         };
         serialPort.addDataListener(listener);
     }
-
 }

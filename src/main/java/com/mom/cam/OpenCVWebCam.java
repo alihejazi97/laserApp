@@ -46,6 +46,15 @@ class OpenCVWebCam implements WebcamInterface{
         shareFrame = new SimpleObjectProperty<>();
     }
 
+    private String camSt;
+
+    public OpenCVWebCam(String camSt) {
+        camID = -1;
+        this.camSt = camSt;
+        initialDelay = 0;
+        shareFrame = new SimpleObjectProperty<>();
+    }
+
     public OpenCVWebCam(int camID, long initialDelay) {
         this.camID = camID;
         this.initialDelay = initialDelay;
@@ -66,7 +75,10 @@ class OpenCVWebCam implements WebcamInterface{
     public synchronized void startCamera(){
         if (!this.active)
         {
-            this.capture.open(camID);
+            if (camID == -1)
+                this.capture.open(camSt);
+            else
+                this.capture.open(camID);
             FPS = (long) capture.get(Videoio.CV_CAP_PROP_FPS);
             if (this.capture.isOpened()) {
                 this.active = true;
@@ -84,7 +96,7 @@ class OpenCVWebCam implements WebcamInterface{
             }
             {
                 if(active)
-                    System.out.println("camera is active.");
+                    System.out.println("camera is gunSignal.");
                 else
                     System.err.println("Impossible to open the camera connection...");
             }

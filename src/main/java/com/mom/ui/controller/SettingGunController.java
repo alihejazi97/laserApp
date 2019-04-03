@@ -14,12 +14,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.stage.Stage;
-import javafx.util.Pair;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
@@ -28,13 +23,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class TargetConfController implements Initializable,ControllerInterface {
+public class SettingGunController implements Initializable,ControllerInterface {
 
     @FXML
     AnchorPane root;
-
-    @FXML
-    HBox hbox;
 
     @FXML
     private ComboBox<Target> targetCombobox;
@@ -43,22 +35,8 @@ public class TargetConfController implements Initializable,ControllerInterface {
     private ComboBox gunCombobox;
 
     @FXML
-    private ComboBox cameraComboBox;
-
-    @FXML
     private TextField bulletNumTextField;
 
-    @FXML
-    TableView<Target> targetTableView;
-
-    @FXML
-    TableColumn<Target,Integer> gunColumn,bulletNumColumn;
-
-    @FXML
-    TableColumn<Target,Target> targetColumn;
-
-    @FXML
-    TableColumn<Target,String> cameraColumn;
 
     @FXML
     Button saveButton;
@@ -68,18 +46,6 @@ public class TargetConfController implements Initializable,ControllerInterface {
         targets.clear();
     }
 
-    void comboBoxConfiguration(){
-        targetCombobox.setItems(FXCollections.observableList(targets));
-        cameraComboBox.setItems(FXCollections.observableList(cameraControl.getCameraNames()));
-
-    }
-    void tableViewConfiguration(){
-        gunColumn.setCellValueFactory(new PropertyValueFactory<>("gunId"));
-        bulletNumColumn.setCellValueFactory(new PropertyValueFactory<>("bulletNum"));
-        cameraColumn.setCellValueFactory(new PropertyValueFactory<>("webCamName"));
-        ObservableList<Target> targetObservableList = FXCollections.observableList(targets);
-        targetTableView.setItems(targetObservableList);
-    }
 
     List<Target> targets;
 

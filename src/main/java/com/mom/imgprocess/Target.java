@@ -1,9 +1,6 @@
 package com.mom.imgprocess;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TextField;
+import org.apache.commons.lang3.StringUtils;
 import org.opencv.core.Point;
 
 public class Target {
@@ -22,25 +19,11 @@ public class Target {
 
     public int gunId,bulletNum;
 
-    public boolean isValid() {
-        return valid;
+    public boolean valid, gunSignal,active;
+
+    public void setGunSignal(boolean gunSignal) {
+        this.gunSignal = gunSignal;
     }
-
-    public void setValid(boolean valid) {
-        this.valid = valid;
-    }
-
-    public boolean valid;
-
-    public boolean isActive() {
-        return active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
-    }
-
-    public boolean active;
 
     public Target clone(){
         Target target = new Target();
@@ -55,6 +38,8 @@ public class Target {
 
     @Override
     public String toString() {
+        if (StringUtils.isNumeric(name))
+            return Integer.toString(Integer.parseInt(name) + 1);
         return name;
     }
 
@@ -69,6 +54,7 @@ public class Target {
         point2 = new Point();
         point3 = new Point();
         valid = false;
+        active = false;
         gunId = 0;
         bulletNum = 13;
     }
@@ -77,71 +63,7 @@ public class Target {
         return webCamName;
     }
 
-    public void setWebCamName(String webCamName) {
-        this.webCamName = webCamName;
-    }
-
-    public int getGunId() {
-        return gunId;
-    }
-
-    public void setGunId(int gunId) {
-        this.gunId = gunId;
-    }
-
-    public int getBulletNum() {
-        return bulletNum;
-    }
-
-    public void setBulletNum(int bulletNum) {
-        this.bulletNum = bulletNum;
-    }
-
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public Point getPoint0() {
-        return point0;
-    }
-
-    public void setPoint0(Point point0) {
-        this.point0 = point0;
-    }
-
-    public Point getPoint1() {
-        return point1;
-    }
-
-    public void setPoint1(Point point1) {
-        this.point1 = point1;
-    }
-
-    public Point getPoint2() {
-        return point2;
-    }
-
-    public void setPoint2(Point point2) {
-        this.point2 = point2;
-    }
-
-    public Point getPoint3() {
-        return point3;
-    }
-
-    public void setPoint3(Point point3) {
-        this.point3 = point3;
     }
 }

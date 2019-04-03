@@ -11,7 +11,8 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="anchor" prefHeight="523.0" prefWidth="938.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mom.ui.controller.SettingPersController">
+<?import java.net.URL?>
+<AnchorPane fx:id="anchor" prefHeight="523.0" prefWidth="938.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mom.ui.controller.SettingTargetController">
    <children>
       <VBox alignment="TOP_CENTER" layoutX="36.0" layoutY="85.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -76,4 +77,7 @@
          </children>
       </VBox>
    </children>
+   <stylesheets>
+      <URL value="@../css/main.css" />
+   </stylesheets>
 </AnchorPane>

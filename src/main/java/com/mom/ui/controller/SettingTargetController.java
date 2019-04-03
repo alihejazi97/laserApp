@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class SettingPersController implements Initializable, ControllerInterface {
+public class SettingTargetController implements Initializable, ControllerInterface {
     @FXML
     private ImageView imgVRaw, imgVSelected;
 
@@ -65,7 +65,6 @@ public class SettingPersController implements Initializable, ControllerInterface
 
     public void setDetectRedDot(DetectRedDot detectRedDot) {
         this.detectRedDot = detectRedDot;
-        detectRedDot.setApplyColorFilter(false);
         detectRedDot.show.setImageView(imgVSelected);
         detectRedDot.show.setShow(true);
         detectRedDot.setTest(true);
@@ -121,8 +120,8 @@ public class SettingPersController implements Initializable, ControllerInterface
 
     public void updateCamera(String camName) {
         if (webcam != null) {
-            webcam.setImageView(null);
             webcam.setShow(false);
+            webcam.setImageView(null);
             webcam.removeListener(detectRedDot);
         }
         if (camName != null && cameraControl.getCamera(camName) != null) {
@@ -245,11 +244,9 @@ public class SettingPersController implements Initializable, ControllerInterface
             if (selectedTarget == null) {
                 //show error message
             } else {
-                if (selectedTarget.webCamName != null) {
-                    updateCamera(cameraComboBox.getValue());
-                    if (cameraComboBox.getValue() != null)
-                        selectedTarget.webCamName = cameraComboBox.getValue();
-                }
+                updateCamera(cameraComboBox.getValue());
+                if (cameraComboBox.getValue() != null)
+                    selectedTarget.webCamName = cameraComboBox.getValue();
             }
         });
         saveButton.setOnMouseClicked(mouseEvent -> {
