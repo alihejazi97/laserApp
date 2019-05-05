@@ -116,7 +116,7 @@ public class preferenceControl implements Initializable,ControllerInterface {
                     targets.add(target);
                 }
             }
-            GsonPersistence.persist2(targets);
+            GsonPersistence.persist(targets);
         });
     }
 }

@@ -1,4 +1,8 @@
 
+.mainBackGround{
+    -fx-background-position: center;
+    -fx-background-image: url('../img/background.png');
+}
 
 * {
     -fx-font-family: "B Lotus";

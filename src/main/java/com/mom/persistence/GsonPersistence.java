@@ -2,6 +2,7 @@ package com.mom.persistence;
 
 import com.google.gson.*;
 import com.mom.cam.CameraControl;
+import com.mom.imgprocess.DetectRedDot;
 import com.mom.imgprocess.Target;
 
 import java.io.File;
@@ -16,10 +17,13 @@ public class GsonPersistence {
 
     private static final int GUN_NUMBER_DEFAULT = 1;
     private static final int TARGET_NUMBER_DEFAULT = 1;
+    private static final int LASER_AREA_THRESHOLD = 200;
+    private static final int LASER_THRESHOLD = 200;
+
 
     static CameraControl cameraControl = CameraControl.getInstance();
 
-    public static void persist2(List objects) {
+    public static void persist(List objects) {
         File file = new File("./settingTarget.json");
         try {
             if (file.createNewFile()) {
@@ -32,6 +36,8 @@ public class GsonPersistence {
             jsonObject.addProperty("GUN_NUMBER",Target.GUN_NUMBER);
             jsonObject.addProperty("camDescriptor",Target.camDescriptor);
             jsonObject.addProperty("TARGET_NUMBER",Target.TARGET_NUMBER);
+            jsonObject.addProperty("LASER_AREA_THRESHOLD", DetectRedDot.LASER_AREA_THRESHOLD);
+            jsonObject.addProperty("LASER_THRESHOLD", DetectRedDot.LASER_THRESHOLD);
             jsonObject.add("targets",element);
             FileWriter writer = new FileWriter(file);
             gson.toJson(jsonObject,writer);
@@ -40,11 +46,13 @@ public class GsonPersistence {
         }
     }
 
-    public static void makeDefaultTargets(List<Target> targets) {
+    public static void setDefaults(List<Target> targets) {
         final List<String> cameraNames = cameraControl.getCameraNames();
         Target.TARGET_NUMBER = TARGET_NUMBER_DEFAULT;
         Target.GUN_NUMBER = GUN_NUMBER_DEFAULT;
         Target.camDescriptor = new String();
+        DetectRedDot.LASER_AREA_THRESHOLD = LASER_AREA_THRESHOLD;
+        DetectRedDot.LASER_THRESHOLD = LASER_THRESHOLD;
         for (int i = 0; i < Target.TARGET_NUMBER; i++) {
             Target target = new Target();
             target.name = Integer.toString(i);
@@ -57,14 +65,14 @@ public class GsonPersistence {
         }
     }
 
-    public static List load2() {
+    public static List load() {
         ArrayList<Target> targets = new ArrayList<>();
         File file = new File("./settingTarget.json");
         try {
             if (file.createNewFile()) {
                 System.out.println("file has been created.");
-                makeDefaultTargets(targets);
-                persist2(targets);
+                setDefaults(targets);
+                persist(targets);
                 targets.clear();
             }
             System.out.println("file has been loaded.");
@@ -81,6 +89,10 @@ public class GsonPersistence {
             Target.camDescriptor = gson.fromJson(element,String.class);
             element = jsonObject.get("TARGET_NUMBER");
             Target.TARGET_NUMBER = gson.fromJson(element,Integer.class);
+            element = jsonObject.get("LASER_THRESHOLD");
+            DetectRedDot.LASER_THRESHOLD = gson.fromJson(element,Double.class);
+            element = jsonObject.get("LASER_AREA_THRESHOLD");
+            DetectRedDot.LASER_AREA_THRESHOLD = gson.fromJson(element,Double.class);
             for (int i = 0; i < Targets.length; i++) {
                 targets.add(Targets[i]);
             }

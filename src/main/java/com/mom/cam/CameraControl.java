@@ -2,9 +2,6 @@ package com.mom.cam;
 
 
 import com.github.sarxos.webcam.Webcam;
-import com.google.gson.*;
-import com.mom.imgprocess.Target;
-
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,10 +34,8 @@ public class CameraControl {
             cameraNames.add(webCamList.get(i).getName());
         }
         loadIPcamera();
-        for (int i = size; i < webCamList.size(); i++) {
-            WebcamInterface webCam = new OpenCVWebCam(cameraNames.get(i));
-            webCam.startCamera();
-            webcams.put(cameraNames.get(i), webCam);
+        for (int i = size; i < cameraNames.size(); i++) {
+
         }
     }
 
@@ -54,8 +49,17 @@ public class CameraControl {
             FileReader reader = new FileReader(file);
             BufferedReader bufferedReader = new BufferedReader(reader);
             String st;
-            while ((st = bufferedReader.readLine()) != null)
-                cameraNames.add(st);
+            while ((st = bufferedReader.readLine()) != null){
+                if (st.length() > 0)
+                    if (st.charAt(0) == '#')
+                        continue;
+                String[] split = st.split(" ");
+                System.out.println("starting camera " + split[0] + "withFPS " + split[1] + ".");
+                cameraNames.add(split[0]);
+                WebcamInterface webCam = new OpenCVWebCam(split[0],Integer.parseInt(split[1]));
+                webCam.startCamera();
+                webcams.put(split[0], webCam);
+            }
             reader.close();
         } catch (FileNotFoundException e1) {
             e1.printStackTrace();
@@ -74,12 +78,6 @@ public class CameraControl {
         if (webcams.containsKey(camName))
             return webcams.get(camName);
         return null;
-    }
-
-    public void refreshCameras() {
-        webcams.forEach((s, webcamInterface) -> webcamInterface.stopCamera());
-        webcams.clear();
-        getOpenCvWebCams();
     }
 
     public List<String> getCameraNames() {

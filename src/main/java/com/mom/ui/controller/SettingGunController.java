@@ -1,23 +1,17 @@
 package com.mom.ui.controller;
 
 import com.mom.cam.CameraControl;
-import com.mom.imgprocess.DetectRedDot;
 import com.mom.imgprocess.Target;
 import com.mom.persistence.GsonPersistence;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import org.apache.commons.lang3.StringUtils;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +47,7 @@ public class SettingGunController implements Initializable,ControllerInterface {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        targets = GsonPersistence.load2();
+        targets = GsonPersistence.load();
         cameraControl = CameraControl.getInstance();
 
         gunCombobox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener() {
@@ -97,7 +91,7 @@ public class SettingGunController implements Initializable,ControllerInterface {
                             selectedTarget.bulletNum = bulletNum;
                 }
             }
-            GsonPersistence.persist2(targets);
+            GsonPersistence.persist(targets);
         });
     }
     int gunId;

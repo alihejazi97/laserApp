@@ -11,14 +11,12 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Pair;
@@ -35,10 +33,10 @@ public class MainController implements Initializable, ControllerInterface {
     HBox activeTargetHbox;
 
     @FXML
-    private Button shooting0Button, shooting1Button, shooting2Button;
+    private Button shooting0Button;
 
     @FXML
-    private MenuItem targetMenuItem, advanceSettingMenuItem, preferencesMenuItem, gunMenuItem,aboutUsMenuItem;
+    private MenuItem targetMenuItem, preferencesMenuItem, gunMenuItem,aboutUsMenuItem;
 
     private FXMLLoader fxmlLoader;
 
@@ -59,7 +57,7 @@ public class MainController implements Initializable, ControllerInterface {
             }
             boxes.clear();
         }
-        targets = GsonPersistence.load2();
+        targets = GsonPersistence.load();
         for (int i = 0; i < Target.GUN_NUMBER; i++) {
             CheckBox checkBox = new CheckBox(Integer.toString(i));
             checkBox.setStyle("-fx-padding: 8 8 8 8");
@@ -68,45 +66,23 @@ public class MainController implements Initializable, ControllerInterface {
         }
     }
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        targets = GsonPersistence.load2();
+    public void afterShow(){
+        cameraControl = cameraControl.getInstance();
+        targets = GsonPersistence.load();
         arduino = Arduino.getInstance();
         stages = new ArrayList<>();
         boxes = new ArrayList<>();
-        arduino.startShooting();
-        System.out.println(Target.TARGET_NUMBER);
-        cameraControl = CameraControl.getInstance();
         setActiveTargetHbox(false);
+    }
 
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
         aboutUsMenuItem.setOnAction(actionEvent -> {
-            Stage stage = new Stage();
-            Label textArea = new Label();
-            AnchorPane pane = new AnchorPane();
-            Scene scene = new Scene(pane,530,300);
-            pane.getChildren().add(textArea);
-            textArea.setAlignment(Pos.CENTER);
-            textArea.setTextAlignment(TextAlignment.RIGHT);
-            String s = "\n" +
-                    "\n" +
-                    "این شبیه ساز به سفارش معاونت أموزش نیروی هوافضا طراحی و ساخته شده است." +
-                    "\n" +
-                    "\n" +
-                    "سید علی فاضل     ۰۹۱۳۲۶۰۱۷۵۶" +
-                    "\n" +
-                    "\n" +
-                    "۱/۱/۱۳۹۸" +
-                    "\n" +
-                    "\n" +
-                    "نسخه ی ۱.۲";
-            textArea.setText(s);
-            pane.setStyle("-fx-font-family: \"B Lotus\";\n" +
-                    "    -fx-font-size: 20;");
-            stage.setScene(scene);
-            stage.show();
-
+            Pair<Stage, ControllerInterface> pair = loadLayoutController("about.fxml");
+            pair.getKey().initModality(Modality.APPLICATION_MODAL);
+            pair.getKey().show();
         });
-
+//font 20
         targetMenuItem.setOnAction(new EventHandler<ActionEvent>() {
             private SettingTargetController controller;
 
@@ -116,8 +92,9 @@ public class MainController implements Initializable, ControllerInterface {
                 Pair<Stage, ControllerInterface> pair = loadLayoutController("settingTarget.fxml");
                 controller = ((SettingTargetController) pair.getValue());
                 controller.setDetectRedDot(new DetectRedDot());
-                pair.getKey().initModality(Modality.APPLICATION_MODAL);
-                pair.getKey().show();
+                Stage s = pair.getKey();
+                s.initModality(Modality.APPLICATION_MODAL);
+                s.show();
                 controller.afterShow();
             }
         });
@@ -199,7 +176,7 @@ public class MainController implements Initializable, ControllerInterface {
     }
 
     private void initializeDetection() {
-        targets = GsonPersistence.load2();
+        targets = GsonPersistence.load();
         for (int i = 0; i < targets.size(); i++) {
             targets.get(i).active = false;
         }
@@ -211,7 +188,7 @@ public class MainController implements Initializable, ControllerInterface {
                 }
             }
         }
-        GsonPersistence.persist2(targets);
+        GsonPersistence.persist(targets);
     }
 
     private Pair<Stage, ControllerInterface> loadLayoutController(String resourceName) {
@@ -226,11 +203,13 @@ public class MainController implements Initializable, ControllerInterface {
         ControllerInterface controller = fxmlLoader.getController();
         Scene scene = new Scene(pane);
         Stage stage = new Stage();
+        stage.getIcons().add(new Image(getClass().getResource("/img/program icon.png").toExternalForm()));
         stage.setOnCloseRequest(windowEvent -> controller.shutdown());
         stage.setScene(scene);
         return new Pair<>(stage, controller);
     }
 
     public void shutdown() {
+        cameraControl.stopCameras();
     }
 }

@@ -81,7 +81,7 @@ public class Draggable {
 
         @Override
         public final void handle(final MouseEvent event) {
-            if (MouseEvent.MOUSE_PRESSED == event.getEventType()) {
+            if (MouseEvent.MOUSE_PRESSED == event.getEventType() || MouseEvent.MOUSE_CLICKED == event.getEventType()) {
                 if (this.enabled && this.eventNode.contains(event.getX(), event.getY())) {
                     this.lastMouseX = event.getSceneX();
                     this.lastMouseY = event.getSceneY();

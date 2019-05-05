@@ -4,6 +4,7 @@ import com.fazecast.jSerialComm.SerialPort;
 import com.fazecast.jSerialComm.SerialPortDataListener;
 import com.fazecast.jSerialComm.SerialPortEvent;
 import com.mom.imgprocess.Target;
+import javafx.application.Platform;
 import javafx.scene.media.AudioClip;
 import com.mom.ui.controller.MainController;
 import javafx.scene.control.Alert;
@@ -60,12 +61,14 @@ public class Arduino {
                 serialPort = port;
         }
         if (serialPort == null) {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("توجه");
-            alert.setHeaderText("");
-            alert.setContentText("ارتباط با سلاح بر قرار نمی باشد. ارتباط را تنظیم نموده و برنامه را مجددا راه اندازی نمایید.");
-            alert.initModality(Modality.WINDOW_MODAL);
-            alert.showAndWait();
+            Platform.runLater(() -> {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("توجه");
+                alert.setHeaderText("");
+                alert.setContentText("ارتباط با سلاح بر قرار نمی باشد. ارتباط را تنظیم نموده و برنامه را مجددا راه اندازی نمایید.");
+                alert.initModality(Modality.WINDOW_MODAL);
+                alert.showAndWait();
+            });
             return;
         }
         serialPort.openPort();

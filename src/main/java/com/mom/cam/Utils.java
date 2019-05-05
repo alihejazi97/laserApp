@@ -1,15 +1,18 @@
 package com.mom.cam;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.nio.ByteBuffer;
+
+import javafx.scene.image.*;
+import javafx.scene.image.Image;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.embed.swing.SwingFXUtils;
-import javafx.scene.image.Image;
 
 public final class Utils
 {
@@ -19,6 +22,19 @@ public final class Utils
         try
         {
             return SwingFXUtils.toFXImage(matToBufferedImage(frame), null);
+        }
+        catch (Exception e)
+        {
+            System.err.println("Cannot convert the Mat obejct: " + e);
+            return null;
+        }
+    }
+
+    public static Image bufferedImage2Image(BufferedImage frame)
+    {
+        try
+        {
+            return SwingFXUtils.toFXImage(frame, null);
         }
         catch (Exception e)
         {
@@ -56,7 +72,7 @@ public final class Utils
         return image;
     }
 
-    private static Mat BufferedImage2mat(BufferedImage original)
+    public static Mat BufferedImage2mat(BufferedImage original)
     {
         int width = original.getWidth(), height = original.getHeight();
         byte[] targetPixels = new byte[width * height * 3];

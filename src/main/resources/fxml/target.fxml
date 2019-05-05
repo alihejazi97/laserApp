@@ -55,6 +55,9 @@
                      </image>
                   </ImageView>
                </children>
+               <VBox.margin>
+                  <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+               </VBox.margin>
             </Pane>
             <Button fx:id="resetButton" mnemonicParsing="false" text="شروع مجدد" />
          </children>

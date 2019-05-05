@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.text.Text?>
+
+<StackPane fx:id="stackRoot" prefHeight="357.0" prefWidth="634.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mom.ui.controller.LoadController">
+   <children>
+      <ImageView fitHeight="436.0" fitWidth="633.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../img/loading screen.jpg" />
+         </image>
+      </ImageView>
+      <Text fx:id="loadingText" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="بارگذاری برنامه" StackPane.alignment="BOTTOM_RIGHT">
+         <StackPane.margin>
+            <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+         </StackPane.margin>
+      </Text>
+      <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="برنامه تیر اندازی" StackPane.alignment="TOP_RIGHT">
+         <StackPane.margin>
+            <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+         </StackPane.margin>
+      </Text>
+      <ImageView fitHeight="73.0" fitWidth="68.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="BOTTOM_LEFT">
+         <image>
+            <Image url="@../img/lg.block-rotate-loading-gif.gif" />
+         </image>
+         <StackPane.margin>
+            <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+         </StackPane.margin>
+      </ImageView>
+   </children>
+    <stylesheets>
+        <URL value="@../css/main.css" />
+    </stylesheets>
+</StackPane>

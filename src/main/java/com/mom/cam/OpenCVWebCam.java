@@ -1,12 +1,13 @@
 package com.mom.cam;
 
-import com.mom.BoardConnection.Arduino;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.image.Image;
 import org.opencv.core.Core;
+import org.opencv.core.CvType;
 import org.opencv.core.Mat;
+import org.opencv.core.Scalar;
 import org.opencv.videoio.VideoCapture;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -15,27 +16,26 @@ import javafx.scene.image.ImageView;
 import org.opencv.videoio.Videoio;
 
 
-class OpenCVWebCam implements WebcamInterface{
+class OpenCVWebCam implements WebcamInterface {
     private ScheduledExecutorService timer;
-    private VideoCapture capture = new VideoCapture();
+    private VideoCapture capture;
     private boolean active = false;
-    private int camID = 0;
-    private long initialDelay = 0;
+    private int camID;
+    private long initialDelay;
     private long FPS = -1;
     private boolean show = false;
     private ImageView imageView;
     private ObjectProperty<Mat> shareFrame;
-    boolean filmMode = true;
-    boolean ardiunoMode = false;
 
-    public void addListener(ChangeListener listener){
+    public void addListener(ChangeListener listener) {
         shareFrame.addListener(listener);
     }
 
-    public void removeListener(ChangeListener listener){shareFrame.removeListener(listener);}
+    public void removeListener(ChangeListener listener) {
+        shareFrame.removeListener(listener);
+    }
 
     static {
-        nu.pattern.OpenCV.loadShared();
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
     }
 
@@ -43,50 +43,37 @@ class OpenCVWebCam implements WebcamInterface{
     public OpenCVWebCam(int camID) {
         this.camID = camID;
         initialDelay = 0;
+        capture = new VideoCapture(camID);
         shareFrame = new SimpleObjectProperty<>();
     }
 
-    private String camSt;
-
-    public OpenCVWebCam(String camSt) {
-        camID = -1;
+    String camSt;
+    public OpenCVWebCam(String camSt,int FPS) {
         this.camSt = camSt;
         initialDelay = 0;
-        shareFrame = new SimpleObjectProperty<>();
-    }
-
-    public OpenCVWebCam(int camID, long initialDelay) {
-        this.camID = camID;
-        this.initialDelay = initialDelay;
-        FPS = (long) capture.get(Videoio.CV_CAP_PROP_FPS);
-        shareFrame = new SimpleObjectProperty<>();
-    }
-
-    public OpenCVWebCam(int camID, long initialDelay, long FPS) {
-        this.camID = camID;
-        this.initialDelay = initialDelay;
+        capture = new VideoCapture(camSt);
         this.FPS = FPS;
+        camID = -1;
         shareFrame = new SimpleObjectProperty<>();
     }
 
-    private OpenCVWebCam() {
-    }
-
-    public synchronized void startCamera(){
-        if (!this.active)
-        {
-            if (camID == -1)
-                this.capture.open(camSt);
-            else
+    public synchronized void startCamera() {
+        if (!this.active) {
+            if (camID >= 0){
                 this.capture.open(camID);
-            FPS = (long) capture.get(Videoio.CV_CAP_PROP_FPS);
+                FPS = (long) capture.get(Videoio.CAP_PROP_FPS);
+            }
             if (this.capture.isOpened()) {
                 this.active = true;
                 Runnable frameGrabber = () -> {
                     try {
+                        if ((shareFrame.getValue() != null) && !shareFrame.getValue().empty())
+                            shareFrame.getValue().release();
                         Mat frame = grabFrame();
-                        show(frame);
-                        shareFrame.setValue(frame);
+                        if (!frame.empty()) {
+                            show(frame);
+                            shareFrame.setValue(frame);
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -94,12 +81,15 @@ class OpenCVWebCam implements WebcamInterface{
                 this.timer = Executors.newSingleThreadScheduledExecutor();
                 this.timer.scheduleAtFixedRate(frameGrabber, initialDelay, 1000 / FPS, TimeUnit.MILLISECONDS);
             }
-            {
-                if(active)
-                    System.out.println("camera is gunSignal.");
+
+            if (active) {
+                if (camID >= 0)
+                    System.out.println("camera " + camID + " started.");
                 else
-                    System.err.println("Impossible to open the camera connection...");
-            }
+                    System.out.println("camera " + camSt + " started.");
+            } else
+                System.err.println("Impossible to open the camera connection...");
+
         }
     }
 
@@ -111,69 +101,69 @@ class OpenCVWebCam implements WebcamInterface{
         this.show = show;
     }
 
-    private void show(Mat frame){
-        if (show){
+    private void show(Mat frame) {
+        if (show) {
             Image imageToShow = Utils.mat2Image(frame);
             updateImageView(imageView, imageToShow);
         }
     }
 
-    private Mat grabFrame()
-    {
+    private Mat grabFrame() {
         Mat frame = new Mat();
-        boolean shit = false;
-        if (this.capture.isOpened())
-        {
-            try
-            {
-                shit = this.capture.read(frame);
-            }
-            catch (Exception e)
-            {
+        boolean valid = false;
+        if (this.capture.isOpened()) {
+            try {
+                if (camID != -1)
+                    valid = this.capture.read(frame);
+                else{
+                    valid = this.capture.grab();
+                    valid = this.capture.read(frame);
+                }
+                if (!valid){
+                    if (camID >= 0)
+                        System.out.println("camera " + camID + " invalid frame.");
+                    else
+                        System.out.println("camera " + camSt + " invalid frame.");
+                }
+            } catch (Exception e) {
                 e.printStackTrace();
                 System.err.println("Exception during the image elaboration: " + e);
             }
         }
-        return shit ? frame : new Mat();
+        return valid ? frame : new Mat(600,600, CvType.CV_8UC3,new Scalar(0,0,0));
     }
 
 
     /**
      * Stop the acquisition from the camera and release all the resources
      */
-    private void stopAcquisition()
-    {
-        if (this.timer !=null && !this.timer.isShutdown())
-        {
-            try
-            {
-                System.out.println("shutting down");
-                // stop the timer
+    private void stopAcquisition() {
+        if (this.timer != null && !this.timer.isShutdown()) {
+            try {
+                if (camID >= 0)
+                    System.out.println("shutting down camera " + camID + ".");
+                else
+                    System.out.println("shutting down camera " + camSt + ".");
                 this.timer.shutdown();
-                this.timer.awaitTermination(FPS, TimeUnit.MILLISECONDS);
-            }
-            catch (InterruptedException e)
-            {
+                this.timer.awaitTermination(1000, TimeUnit.MILLISECONDS);
+            } catch (InterruptedException e) {
                 System.err.println("Exception in stopping the frame capture, trying to release the camera now... " + e);
                 e.printStackTrace();
             }
         }
 
-        if (this.capture.isOpened())
-        {
+        if (this.capture.isOpened()) {
             this.capture.release();
         }
     }
 
 
-    private void updateImageView(ImageView view, Image image)
-    {
+    private void updateImageView(ImageView view, Image image) {
         Utils.onFXThread(view.imageProperty(), image);
     }
 
 
-    public synchronized void stopCamera()
-    {
+    public synchronized void stopCamera() {
         this.stopAcquisition();
     }
 }

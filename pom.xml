@@ -17,6 +17,28 @@
                     <target>11</target>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>2.3</version>
+                <executions>
+                    <!-- Run shade goal on package phase -->
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <transformers>
+                                <!-- add Main-Class to manifest file -->
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>com.mom.Main</mainClass>
+                                </transformer>
+                            </transformers>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
     <packaging>jar</packaging>
@@ -28,6 +50,7 @@
             <artifactId>javafx-media</artifactId>
             <version>12</version>
         </dependency>
+
 
         <dependency>
             <groupId>org.apache.cassandra</groupId>
@@ -47,6 +70,37 @@
                 </exclusion>
             </exclusions>
 
+        </dependency>
+        <dependency>
+            <groupId>com.github.sarxos</groupId>
+            <artifactId>webcam-capture</artifactId>
+            <version>0.3.12</version>
+        </dependency>
+
+        <!--<dependency>-->
+            <!--<groupId>ali.java.opencv</groupId>-->
+            <!--<artifactId>maindll</artifactId>-->
+            <!--<version>4.2</version>-->
+            <!--<scope>runtime</scope>-->
+            <!--<type>dll</type>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>ali.java.opencv</groupId>-->
+            <!--<artifactId>cameradll</artifactId>-->
+            <!--<version>4.2</version>-->
+            <!--<scope>runtime</scope>-->
+            <!--<type>dll</type>-->
+        <!--</dependency>-->
+        <dependency>
+            <groupId>ali.java.opencv</groupId>
+            <artifactId>jarfile</artifactId>
+            <version>4.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.sarxos</groupId>
+            <artifactId>webcam-capture-driver-ipcam</artifactId>
+            <version>0.3.12</version>
         </dependency>
 
         <dependency>
@@ -74,12 +128,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.openpnp</groupId>
-            <artifactId>opencv</artifactId>
-            <version>3.4.2-1</version>
-        </dependency>
-
-        <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
             <version>11</version>
@@ -91,11 +139,6 @@
             <version>11</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.github.sarxos</groupId>
-            <artifactId>webcam-capture</artifactId>
-            <version>0.3.12</version>
-        </dependency>
 
         <dependency>
             <groupId>com.google.code.gson</groupId>

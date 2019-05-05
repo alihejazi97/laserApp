@@ -31,7 +31,7 @@ public class SettingTargetController implements Initializable, ControllerInterfa
     private Button saveButton;
 
     @FXML
-    private AnchorPane anchor,imgVRawAnchor,imgVSelectedAnchor;
+    private AnchorPane imgVRawAnchor;
 
     @FXML
     private ComboBox<String> cameraComboBox;
@@ -215,7 +215,7 @@ public class SettingTargetController implements Initializable, ControllerInterfa
         circles = new ArrayList<>();
         cameraControl = CameraControl.getInstance();
         cameraComboBox.setItems(FXCollections.observableList(cameraControl.getCameraNames()));
-        targets = GsonPersistence.load2();
+        targets = GsonPersistence.load();
         targetComboBox.setItems(FXCollections.observableList(targets));
         targetComboBox.getSelectionModel().selectedIndexProperty().addListener((observableValue, oldVal, newVal) -> {
             selectedTarget = targets.get(newVal.intValue());
@@ -232,7 +232,7 @@ public class SettingTargetController implements Initializable, ControllerInterfa
             cameraComboBox.getSelectionModel().clearSelection();
             if (selectedTarget.webCamName != null){
                 for (String s:
-                     cameraComboBox.getItems()) {
+                        cameraComboBox.getItems()) {
                     if (selectedTarget.webCamName.equals(s)) {
                         cameraComboBox.getSelectionModel().select(s);
                         break;
@@ -250,7 +250,7 @@ public class SettingTargetController implements Initializable, ControllerInterfa
             }
         });
         saveButton.setOnMouseClicked(mouseEvent -> {
-            GsonPersistence.persist2(targets);
+            GsonPersistence.persist(targets);
         });
     }
 }
