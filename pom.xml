@@ -77,20 +77,12 @@
             <version>0.3.12</version>
         </dependency>
 
-        <!--<dependency>-->
-            <!--<groupId>ali.java.opencv</groupId>-->
-            <!--<artifactId>maindll</artifactId>-->
-            <!--<version>4.2</version>-->
-            <!--<scope>runtime</scope>-->
-            <!--<type>dll</type>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-            <!--<groupId>ali.java.opencv</groupId>-->
-            <!--<artifactId>cameradll</artifactId>-->
-            <!--<version>4.2</version>-->
-            <!--<scope>runtime</scope>-->
-            <!--<type>dll</type>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>1.6.1</version>
+        </dependency>
+
         <dependency>
             <groupId>ali.java.opencv</groupId>
             <artifactId>jarfile</artifactId>
@@ -101,6 +93,12 @@
             <groupId>com.github.sarxos</groupId>
             <artifactId>webcam-capture-driver-ipcam</artifactId>
             <version>0.3.12</version>
+        </dependency>
+
+        <dependency>
+            <groupId>dsj</groupId>
+            <artifactId>dsj</artifactId>
+            <version>1.0</version>
         </dependency>
 
         <dependency>

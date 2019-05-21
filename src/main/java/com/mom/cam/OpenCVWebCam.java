@@ -1,5 +1,6 @@
 package com.mom.cam;
 
+import com.mom.cam.util.Utils;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
@@ -57,6 +58,7 @@ class OpenCVWebCam implements WebcamInterface {
         shareFrame = new SimpleObjectProperty<>();
     }
 
+    Mat lastFrame;
     public synchronized void startCamera() {
         if (!this.active) {
             if (camID >= 0){
@@ -67,12 +69,14 @@ class OpenCVWebCam implements WebcamInterface {
                 this.active = true;
                 Runnable frameGrabber = () -> {
                     try {
+                        if (lastFrame != null)
+                            lastFrame.release();
                         if ((shareFrame.getValue() != null) && !shareFrame.getValue().empty())
                             shareFrame.getValue().release();
-                        Mat frame = grabFrame();
-                        if (!frame.empty()) {
-                            show(frame);
-                            shareFrame.setValue(frame);
+                        lastFrame = grabFrame();
+                        if (!lastFrame.empty()) {
+                            show(lastFrame);
+                            shareFrame.setValue(lastFrame);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();

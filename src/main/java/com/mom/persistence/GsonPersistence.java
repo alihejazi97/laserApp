@@ -70,12 +70,11 @@ public class GsonPersistence {
         File file = new File("./settingTarget.json");
         try {
             if (file.createNewFile()) {
-                System.out.println("file has been created.");
+                System.out.println("setting file has been created.");
                 setDefaults(targets);
                 persist(targets);
                 targets.clear();
             }
-            System.out.println("file has been loaded.");
             GsonBuilder gsonBuilder = new GsonBuilder();
             Gson gson = gsonBuilder.create();
             FileReader reader = new FileReader(file);

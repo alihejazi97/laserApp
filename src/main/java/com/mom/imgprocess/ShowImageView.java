@@ -1,6 +1,6 @@
 package com.mom.imgprocess;
 
-import com.mom.cam.Utils;
+import com.mom.cam.util.Utils;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import org.opencv.core.Mat;

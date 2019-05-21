@@ -46,6 +46,10 @@ public class DetectRedDot implements ChangeListener<Mat> {
 
     private Mat targetImage;
 
+    static private final int NUMBER_OF_FRAME_FOR_PROCESS = 10;
+
+    private int frameProcessed = 0;
+
     private StringProperty score;
 
     public int getIndex() {
@@ -99,7 +103,7 @@ public class DetectRedDot implements ChangeListener<Mat> {
     boolean firstTime = true;
 
     private void configLightValue(Mat mat){
-        for (int i = 0; i <= 245 ; i++) {
+        for (int i = 0; i <= 237 ; i++) {
             Mat matCopy = mat.clone();
             matCopy = cutImage(matCopy);
             if (matCopy.channels() != 1)
@@ -121,7 +125,7 @@ public class DetectRedDot implements ChangeListener<Mat> {
             }
             matCopy.release();
             if (!checkContours){
-                LASER_THRESHOLD = i + 10;
+                LASER_THRESHOLD = i + 15;
                 System.out.println("LASER_THRESHOLD = " + LASER_THRESHOLD);
                 return;
             }
@@ -158,13 +162,6 @@ public class DetectRedDot implements ChangeListener<Mat> {
         }
         if (!target.gunSignal)
             return;
-        if (StringUtils.isNumeric(remainBulletProperty().getValue())) {
-            int remainBullet = Integer.parseInt(remainBulletProperty().getValue()) - 1;
-            if (remainBullet >= 0)
-                Platform.runLater(() -> remainBulletProperty().setValue(Integer.toString(remainBullet)));
-            else
-                target.active = false;
-        }
         Mat matCopy = mat.clone();
         matCopy = cutImage(matCopy);
         if (matCopy.channels() != 1)
@@ -177,7 +174,6 @@ public class DetectRedDot implements ChangeListener<Mat> {
         boolean checkContours = false;
         double max = 0;
         for (int i = 0; i < countours.size(); i++) {
-            System.out.println("a = " + Imgproc.contourArea(countours.get(i)));
             max = Imgproc.contourArea(countours.get(i)) > max ? Imgproc.contourArea(countours.get(i)) : max;
             if (max > LASER_AREA_THRESHOLD) {
                 checkContours = true;
@@ -190,6 +186,9 @@ public class DetectRedDot implements ChangeListener<Mat> {
             Point point = new Point();
             if (findDot(matCopy, point)) {
                 shotPoint.add(new Pair<>(point.clone(),15 - Integer.parseInt(remainBullet.getValue())));
+                target.gunSignal = false;
+                frameProcessed = 0;
+                decrementRemainBullet();
                 int points = 0;
                 if (StringUtils.isNumeric(score.getValue()))
                     points = Integer.parseInt(score.getValue());
@@ -200,11 +199,26 @@ public class DetectRedDot implements ChangeListener<Mat> {
         }
         drawCircles(matShow, matCopy.size());
         show(matShow, show);
-        target.gunSignal = false;
+        if ((frameProcessed == NUMBER_OF_FRAME_FOR_PROCESS) && target.gunSignal){
+            target.gunSignal = false;
+            frameProcessed = 0;
+            decrementRemainBullet();
+        }
+        else if (target.gunSignal)
+            frameProcessed++;
         matCopy.release();
         matShow.release();
     }
 
+    private void decrementRemainBullet(){
+        if (StringUtils.isNumeric(remainBulletProperty().getValue())) {
+            int remainBullet = Integer.parseInt(remainBulletProperty().getValue()) - 1;
+            if (remainBullet >= 0)
+                Platform.runLater(() -> remainBulletProperty().setValue(Integer.toString(remainBullet)));
+            else
+                target.active = false;
+        }
+    }
 
     void drawCircles(Mat mat, Size original) {
         for (int i = 0 ; i < shotPoint.size() - 1; i++) {
@@ -261,6 +275,8 @@ public class DetectRedDot implements ChangeListener<Mat> {
 
     public void debug(Mat mat){
         Mat matCopy = mat.clone();
+        if (!target.gunSignal)
+            return;
         matCopy = cutImage(matCopy);
         if (matCopy.channels() != 1)
         Imgproc.cvtColor(matCopy, matCopy, Imgproc.COLOR_BGR2GRAY);
@@ -277,12 +293,14 @@ public class DetectRedDot implements ChangeListener<Mat> {
             System.out.println("counter " + (i) + " area = " + Imgproc.contourArea(countour));
             if (Imgproc.contourArea(countour) > LASER_AREA_THRESHOLD)
                 Imgproc.drawContours(matShow, countours, i, new Scalar((255 / (countours.size())) * (i + 1), 0, 0), 5);
+            countours.get(i).release();
         }
         System.out.println("laser light = " + LASER_THRESHOLD);
         System.out.println("laser are = " + LASER_AREA_THRESHOLD);
         matCopy.release();
         show(matShow, show);
         matShow.release();
+        target.gunSignal = false;
     }
     public void test(Mat mat) {
         Mat matCopy = mat.clone();

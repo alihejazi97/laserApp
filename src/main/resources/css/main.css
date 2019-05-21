@@ -1,4 +1,8 @@
 
+@font-face {
+    src: url("../font/B-Lotus/B_Lotus.ttf");
+}
+
 .mainBackGround{
     -fx-background-position: center;
     -fx-background-image: url('../img/background.png');

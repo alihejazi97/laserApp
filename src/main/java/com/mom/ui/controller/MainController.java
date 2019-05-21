@@ -173,6 +173,7 @@ public class MainController implements Initializable, ControllerInterface {
                 stages) {
             stage.close();
         }
+        stages.clear();
     }
 
     private void initializeDetection() {

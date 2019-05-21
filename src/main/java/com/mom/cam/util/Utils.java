@@ -1,4 +1,4 @@
-package com.mom.cam;
+package com.mom.cam.util;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -72,13 +72,14 @@ public final class Utils
         return image;
     }
 
-    public static Mat BufferedImage2mat(BufferedImage original)
-    {
+    public static Mat BufferedImage2mat(BufferedImage original) {
         int width = original.getWidth(), height = original.getHeight();
         byte[] targetPixels = new byte[width * height * 3];
         final byte[] sourcePixels = ((DataBufferByte) original.getRaster().getDataBuffer()).getData();
         System.arraycopy(sourcePixels, 0, targetPixels, 0, sourcePixels.length);
-        Mat mat = new Mat(height,width, CvType.CV_8UC3,ByteBuffer.wrap(targetPixels));
+        Mat mat = new Mat(height,width, CvType.CV_8UC3);
+        mat.put(0,0,targetPixels);
+        System.out.println("Party6");
         return mat;
     }
 }

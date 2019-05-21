@@ -1,4 +1,5 @@
 package com.mom.ui;
+
 import com.mom.cam.CameraControl;
 import com.mom.ui.controller.LoadController;
 import com.mom.ui.controller.MainController;
@@ -21,19 +22,33 @@ public class App extends Application {
     private MainController mainController;
     Stage stage;
     public static boolean config;
+    public static boolean DipCam;
+    public static boolean DwebCam;
+
     public void start(Stage stage) throws Exception {
         Parameters parameters = getParameters();
         List<String> list = parameters.getUnnamed();
-        for (String s:
-             list) {
+        for (String s :
+                list) {
             if (s.equals("config"))
                 config = true;
+            if (s.equals("disableipcam"))
+                DipCam = true;
+            if (s.equals("disablewebcam"))
+                DwebCam = true;
+            if (s.equals("help")) {
+                System.out.println("available options are:");
+                System.out.println("config");
+                System.out.println("disableipcam");
+                System.out.println("disablewebcam");
+                System.exit(0);
+            }
         }
         this.stage = stage;
         fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(getClass().getResource("/fxml/load.fxml"));
         StackPane pane = fxmlLoader.load();
-        LoadController loadController= fxmlLoader.getController();
+        LoadController loadController = fxmlLoader.getController();
         scene = new Scene(pane);
         stage.initStyle(StageStyle.UNDECORATED);
         stage.setScene(scene);
@@ -41,7 +56,7 @@ public class App extends Application {
         loadController.setApp(this);
     }
 
-    public void startMainApplication(){
+    public void startMainApplication() {
         stage.close();
         stage = new Stage();
         fxmlLoader = new FXMLLoader();
@@ -61,6 +76,7 @@ public class App extends Application {
         stage.show();
         mainController.afterShow();
     }
+
     @Override
     public void stop() throws Exception {
         CameraControl cameraControl = CameraControl.getInstance();
